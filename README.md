@@ -1,4 +1,4 @@
-gitgudcommit
+GitGudCommit
 ===
 
 https://xkcd.com/1296/
