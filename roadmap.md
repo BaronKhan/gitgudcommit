@@ -11,6 +11,7 @@ Roadmap duration: ~ 1 year
 - [ ] Add basic testing framework
 - [ ] Create template for output
 - [ ] Rule-check for message information
+- [ ] Add score boards (monthly, all time)
 - [ ] Create Unix command line tool ~ *September 2018*
 - [ ] Check for references in message
 - [ ] Plan research paper
