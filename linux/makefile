@@ -4,7 +4,7 @@ CPPFLAGS += -std=c++11 -W -Wall -g
 CPPFLAGS += -O3
 CPPFLAGS += -I include
 
-LDFLAGS += -lgit2
+LDFLAGS += -lgit2 -ltbb
 
 all : bin/gitgudcommit
 

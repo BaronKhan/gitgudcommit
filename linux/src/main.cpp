@@ -14,14 +14,14 @@ int main(int argc, char *argv[])
     char *repo_location = argv[1];
     char *output_name = argv[2];
 
-    /* Check if repo_location is a git repo */
-    std::ifstream gitfile(strcat(repo_location,"/.git"));
-    if (!gitfile.is_open()) {
-      throw ".git directory was not found";
-    }
-    gitfile.close();
-
     git_libgit2_init();
+
+    // Check if repo_location is a git repo
+    if (git_repository_open_ext(NULL, repo_location,
+      GIT_REPOSITORY_OPEN_NO_SEARCH, NULL) != 0)
+    {
+      throw "directory is not a git repository";
+    }
 
     // Open a repository
     git_repository *repo;

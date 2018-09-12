@@ -11,5 +11,5 @@ Dependencies
 
 ```
 $ sudo apt-get update
-$ sudo apt-get install libgit2-dev
+$ sudo apt-get install libgit2-dev libtbb-dev
 ```

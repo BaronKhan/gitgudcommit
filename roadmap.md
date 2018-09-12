@@ -3,7 +3,7 @@ RoadMap
 
 Roadmap duration: ~ 1 year
 
-- [ ] Read a git repository
+- [x] Read a git repository
 - [ ] Perform basic commit checks
 - [ ] Choose TBB or OpenMP
 - [ ] Analyse commits in parallel
@@ -15,5 +15,5 @@ Roadmap duration: ~ 1 year
 - [ ] Create Unix command line tool ~ *September 2018*
 - [ ] Check for references in message
 - [ ] Plan research paper
-- [ ] Write research paper ~ *Novemeber 2018*
+- [ ] Write research paper ~ *November 2018*
 - [ ] Create browser tool ~ *May 2019*
