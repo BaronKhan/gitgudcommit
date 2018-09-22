@@ -1,9 +1,9 @@
-#ifndef COMMIT_PROCESSOR_HPP
-#define COMMIT_PROCESSOR_HPP
+#ifndef REPO_MANAGER_HPP
+#define REPO_MANAGER_HPP
 
 #include "git2.h"
 
-class commit_processor {
+class RepoManager {
   git_commit **commits;
   git_repository *repo;
   char *branch_name;

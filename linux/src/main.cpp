@@ -3,6 +3,8 @@
 #include <git2.h>
 #include <cstring>
 
+#include "repo_manager.hpp"
+
 int main(int argc, char *argv[])
 {
   if (argc < 2) {
