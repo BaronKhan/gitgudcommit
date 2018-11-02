@@ -1,2 +1,5 @@
 bin
 w
+libgit2
+libgit2.js
+libgit2.wasm

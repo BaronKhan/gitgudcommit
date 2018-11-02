@@ -19,10 +19,9 @@
         <p>Then try cloning using: <pre>jsgitclone("https://somehost/path-to-gitrepository.git","destinationfolder")</pre></p>
 
         <p>Finally list the contents of the repository using <pre>FS.readdir("destinationfolder")</pre></p>
+
+        <button onclick="cloneTest()">Clone chipEmu</button>
         
     </body>
-    <script>
-        const gitworker = new Worker("git_worker.js");
-        
-    </script>
+    <script src="main.js"></script>
 </html>
