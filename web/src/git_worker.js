@@ -20,6 +20,32 @@ self.addEventListener('message', function(e) {
       jsgitclone(data.location,data.dir_name);
       self.postMessage('cloned repository to '+data.dir_name);
       break;
+    case 'chdir':
+      FS.chdir(data.dir_name);
+      break;
+    case 'startwalk':
+      jsgitstartwalk();
+      self.postMessage('Starting walk');
+      break;
+    case 'walknextcommit':
+      var commit;
+      do {
+        commit = jsgitwalknextcommit();
+        if (commit != "___NULL___" && !commit.includes("Merge pull request")) {
+          self.postMessage(JSON.parse(commit
+            .replace('&', '&amp;')
+            .replace('\n', '&endl;')
+            .replace('<', '&lt;')
+            .replace('>', '&gt;')
+            .replace('#', '&hash;')
+            ));
+        }
+      } while(commit.includes("Merge pull request"));
+      break;
+    case 'endwalk':
+      jsgitendwalk();
+      self.postMessage('Ending walk');
+      break;
     default:
       self.postMessage('Unknown command: ' + data.msg);
   };

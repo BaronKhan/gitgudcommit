@@ -1,4 +1,10 @@
 #!/bin/bash
+
+if [ ! -d ../deps ]; then
+  echo "Execute in deps directory"
+  exit
+fi
+
 if [ ! -d libgit2 ]; then
   git clone https://github.com/BaronKhan/libgit2
 fi
