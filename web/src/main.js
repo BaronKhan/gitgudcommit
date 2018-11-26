@@ -1,16 +1,21 @@
 const gitworker = new Worker("git_worker.js");
 
 var currentCommit = {};
+var commits = [];
+var finishedWalk = false;
 
 gitworker.addEventListener('message', function(e) {
   if (typeof e.data === 'object' && e.data.hasOwnProperty('author')) {
     currentCommit = e.data;
+    commits.push(currentCommit);
+  } else if (e.data == "___NULL___") {
+    finishedWalk = true;
   }
   console.log(e.data);
 }, false);
 
 function cloneTest() {
-  clone('https://github.com/BaronKhan/chip8Emulator.git', 'chip8Emulator')
+  clone('https://github.com/BaronKhan/chip8Emulator', 'chip8Emulator')
 }
 
 function clone(url, dir_name) {
@@ -33,6 +38,8 @@ function chdir(dir_name) {
 
 function startWalk() {
   gitworker.postMessage({'cmd': 'startwalk'});
+  commits = [];
+  finishedWalk = false;
 }
 
 function getNextCommit() {

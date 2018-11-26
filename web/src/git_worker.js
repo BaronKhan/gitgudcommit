@@ -32,15 +32,25 @@ self.addEventListener('message', function(e) {
       do {
         commit = jsgitwalknextcommit();
         if (commit != "___NULL___" && !commit.includes("Merge pull request")) {
-          self.postMessage(JSON.parse(commit
+          jsonObj = JSON.parse(commit
             .replace('&', '&amp;')
             .replace('\n', '&endl;')
             .replace('<', '&lt;')
             .replace('>', '&gt;')
             .replace('#', '&hash;')
-            ));
+            );
+          jsonObj.message = jsonObj.message
+            .replace('&endl;', '\n')
+            .replace('&lt;', '<')
+            .replace('&gt;', '>')
+            .replace('&hash;', '#')
+            .replace('&amp;', '&');
+          self.postMessage(jsonObj);
         }
       } while(commit.includes("Merge pull request"));
+      if (commit == "___NULL___") {
+        self.postMessage("___NULL___")
+      }
       break;
     case 'endwalk':
       jsgitendwalk();
