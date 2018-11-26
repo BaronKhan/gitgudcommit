@@ -12,8 +12,8 @@ fi
 if [ -z "$(ls -A libgit2)" ]; then
   echo "initialising libgit2 submodule"
   git submodule init
-  echo "updating submodule"
-  git submodule update
+  echo "updating submodules"
+  git submodule foreach git pull origin master
 fi
 
 cd libgit2/emscripten_hacks
