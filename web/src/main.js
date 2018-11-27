@@ -3,11 +3,18 @@ const gitworker = new Worker("git_worker.js");
 var currentCommit = {};
 var commits = [];
 var finishedWalk = false;
+var cloneProgress = 0;
 
 gitworker.addEventListener('message', function(e) {
-  if (typeof e.data === 'object' && e.data.hasOwnProperty('author')) {
-    currentCommit = e.data;
-    commits.push(currentCommit);
+  if (typeof e.data === 'object') {
+    if (e.data.hasOwnProperty('author')) {
+      currentCommit = e.data;
+      commits.push(currentCommit);
+    } else if (e.data.hasOwnProperty('cloneprogress')) {
+      cloneProgress = e.data.cloneprogress;
+      setProgressBar();
+      return; //Don't log the progress percentage
+    }
   } else if (e.data == "___NULL___") {
     finishedWalk = true;
   }
@@ -19,6 +26,8 @@ function cloneTest() {
 }
 
 function clone(url, dir_name) {
+  cloneProgress = 0;
+  setProgressBar();
   if (!url.endsWith(".git")) {
     url += ".git"
   }
@@ -48,4 +57,9 @@ function getNextCommit() {
 
 function endWalk() {
   gitworker.postMessage({'cmd': 'endwalk'});
+}
+
+function setProgressBar() {
+  var elem = document.getElementById("cloneProgressBar");   
+  elem.style.width = cloneProgress + '%';
 }

@@ -9,6 +9,16 @@
                 background-color: #ddd;
                 padding: 5px;
             }
+            #cloneProgress {
+                width: 100%;
+                background-color: #ddd;
+            }
+
+            #cloneProgressBar {
+                width: 0%;
+                height: 30px;
+                background-color: #4CAF50;
+            }
         </style>
         <p>libgit2 is started as a webworker. Open web console to test it (Right-click + inspect in Google Chrome).</p>
 
@@ -21,6 +31,10 @@
         <p>Finally list the contents of the repository using <pre>FS.readdir("destinationfolder")</pre></p>
 
         <button onclick="cloneTest()">Clone chipEmu</button>
+
+        <div id="cloneProgress">
+            <div id="cloneProgressBar"></div>
+        </div>
         
     </body>
     <script src="main.js"></script>
