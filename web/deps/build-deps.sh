@@ -14,6 +14,7 @@ if [ -z "$(ls -A libgit2)" ]; then
   git submodule init
   echo "updating submodules"
   git submodule foreach git pull origin master
+  git submodule update
 fi
 
 cd libgit2/emscripten_hacks
