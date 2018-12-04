@@ -32,22 +32,27 @@ self.addEventListener('message', function(e) {
       do {
         commit = jsgitwalknextcommit();
         if (commit != "___NULL___" && !commit.includes("Merge pull request")) {
-          jsonObj = JSON.parse(commit
-            .replace('&', '&amp;')
-            .replace('\n', '&endl;')
-            .replace('<', '&lt;')
-            .replace('>', '&gt;')
-            .replace('#', '&hash;')
-            );
-          jsonObj.message = jsonObj.message
-            .replace('&endl;', '\n')
-            .replace('&lt;', '<')
-            .replace('&gt;', '>')
-            .replace('&hash;', '#')
-            .replace('&amp;', '&');
-          self.postMessage(jsonObj);
+          try {
+            jsonObj = JSON.parse(commit
+              .replace('&', 'amp;')
+              .replace('\n', 'endl;')
+              .replace('<', 'lt;')
+              .replace('>', 'gt;')
+              .replace('#', 'hash;')
+              );
+            jsonObj.message = jsonObj.message
+              .replace('endl;', '\n')
+              .replace('lt;', '<')
+              .replace('gt;', '>')
+              .replace('hash;', '#')
+              .replace('amp;', '&');
+            self.postMessage(jsonObj);
+          } catch (e) {
+            console.log("Error while parsing this commit:\n"+commit+"\n\n"+e.message);
+            commit = "<UNKNOWN>";
+          }
         }
-      } while(commit.includes("Merge pull request"));
+      } while(commit.includes("Merge pull request") || commit.includes("<UNKNOWN>"));
       if (commit == "___NULL___") {
         self.postMessage("___NULL___")
       }
