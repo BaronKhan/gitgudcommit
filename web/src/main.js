@@ -42,10 +42,12 @@ gitworker.addEventListener('message', function(e) {
 }, false);
 
 function cloneTest() {
-  clone('https://github.com/BaronKhan/chip8Emulator', 'chip8Emulator')
+  analyseRepo('https://github.com/BaronKhan/chip8Emulator');
 }
 
 function analyseRepo(url) {
+  if (analysisInProgress)
+    return false;
   analysisInProgress = true;
   getCommits = true;
   cloneProgress = 0;
@@ -129,3 +131,54 @@ function getProgressBar() {
   var elem = document.getElementById("cloneProgressBar");   
   return elem.style.width;
 }
+
+////////////////////////////////////////////////////////////////////
+
+uploadZip.onchange = function() {
+  if (analysisInProgress)
+    return;
+  var zip = new JSZip();
+  zip.loadAsync( this.files[0] /* = file blob */)
+     .then(function(contents) {
+        // process ZIP file content here
+        try {
+          var isRepo = false;
+          Object.keys(contents.files).forEach(function(filename) {
+            if (filename.includes(".git")) {
+              // alert("This is a repo");
+              isRepo = true;
+            }
+          });
+          if (!isRepo) {
+            throw new Error("This ZIP file does not contain a Git repository.");
+          }
+          else {
+            //Create all the folders first, then the files
+            Object.keys(contents.files).forEach(function(filename) {
+              if (filename.includes(".git") && filename.endsWith("/")) {
+                zip.files[filename].async('string').then(function (fileData) {
+                  // console.log(filename)
+                  gitworker.postMessage({
+                    'cmd': 'createfolder',
+                    'folder_name': filename});
+                });
+              }
+            });
+            Object.keys(contents.files).forEach(function(filename) {
+              if (filename.includes(".git") && !filename.endsWith("/")) {
+                zip.files[filename].async('string').then(function (fileData) {
+                  // console.log(filename)
+                  gitworker.postMessage({
+                    'cmd': 'createfile',
+                    'file_name': filename,
+                    'file_data': fileData});
+                });
+              }
+            });
+          }
+        }
+        catch (e) {
+          alert("Error: "+e.message);
+        }
+     }, function() { alert("Not a valid zip file"); }); 
+};

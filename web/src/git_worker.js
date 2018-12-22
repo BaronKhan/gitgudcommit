@@ -61,7 +61,37 @@ self.addEventListener('message', function(e) {
       jsgitendwalk();
       self.postMessage('Ending walk');
       break;
+    case 'createfolder':
+      var dir_name = data.folder_name;
+      console.log(dir_name)
+      subdirs = dir_name.split("/");
+      console.log("subdirs = "+subdirs+"("+subdirs.length+")")
+      var current_dir = "";
+      for (var i = 0; i<subdirs.length; i++) {
+        var old_dir = current_dir;
+        try {
+          Module['FS_createFolder']('/workdir/'+old_dir, subdirs[i], true, true);
+        } catch(e) { console.log(subdirs[i]+": "+e.message); }
+        current_dir += "/"+subdirs[i];
+      }
+      break;
+    case 'createfile':
+      console.log("Creating file with name: "+data.file_name)
+      var base_name = baseName(data.file_name);
+      var dir_name = data.file_name.substring(0,data.file_name.lastIndexOf("/")+1);
+      console.log("base name = "+base_name+"; dir name = "+dir_name)
+      Module['FS_createDataFile']('/workdir/'+dir_name, base_name, data.file_data, true, true, true);
+      break;
     default:
       self.postMessage('Unknown command: ' + data.msg);
   };
 }, false);
+
+
+function baseName(str)
+{
+   var base = new String(str).substring(str.lastIndexOf('/') + 1); 
+    if(base.lastIndexOf(".") != -1)       
+        base = base.substring(0, base.lastIndexOf("."));
+   return base;
+}
