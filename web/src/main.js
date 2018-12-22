@@ -155,7 +155,7 @@ uploadZip.onchange = function() {
           else {
             //Create all the folders first, then the files
             Object.keys(contents.files).forEach(function(filename) {
-              if (filename.includes(".git") && filename.endsWith("/")) {
+              if (filename.includes(".git/") && filename.endsWith("/")) {
                 zip.files[filename].async('string').then(function (fileData) {
                   // console.log(filename)
                   gitworker.postMessage({
@@ -165,7 +165,7 @@ uploadZip.onchange = function() {
               }
             });
             Object.keys(contents.files).forEach(function(filename) {
-              if (filename.includes(".git") && !filename.endsWith("/")) {
+              if (filename.includes(".git/") && !filename.endsWith("/")) {
                 zip.files[filename].async('string').then(function (fileData) {
                   // console.log(filename)
                   gitworker.postMessage({

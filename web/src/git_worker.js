@@ -80,7 +80,9 @@ self.addEventListener('message', function(e) {
       var base_name = baseName(data.file_name);
       var dir_name = data.file_name.substring(0,data.file_name.lastIndexOf("/")+1);
       console.log("base name = "+base_name+"; dir name = "+dir_name)
-      Module['FS_createDataFile']('/workdir/'+dir_name, base_name, data.file_data, true, true, true);
+      try {
+        Module['FS_createDataFile']('/workdir/'+dir_name, base_name, data.file_data, true, true, true);
+      } catch(e) { console.log(base_name+": "+e.message); }
       break;
     default:
       self.postMessage('Unknown command: ' + data.msg);
