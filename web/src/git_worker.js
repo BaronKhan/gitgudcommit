@@ -1,6 +1,7 @@
 const startTime = new Date().getTime();
 importScripts("libgit2.js");
 var started = false;
+var filesProcessed = 0;
 Module['onRuntimeInitialized'] = () => {
     const dir="workdir";
     FS.mkdir(dir,"0777");
@@ -61,17 +62,22 @@ self.addEventListener('message', function(e) {
       jsgitendwalk();
       self.postMessage('Ending walk');
       break;
+    case 'resetcount':
+      filesProcessed = 0;
+      break;
     case 'createfolder':
       var dir_name = data.folder_name;
       console.log(dir_name)
       subdirs = dir_name.split("/");
-      console.log("subdirs = "+subdirs+"("+subdirs.length+")")
+      console.log("subdirs = "+subdirs+" ("+subdirs.length+")")
       var current_dir = "";
       for (var i = 0; i<subdirs.length; i++) {
+        if (subdirs[i] == "")
+          continue;
         var old_dir = current_dir;
         try {
-          Module['FS_createFolder']('/workdir/'+old_dir, subdirs[i], true, true);
-        } catch(e) { console.log(subdirs[i]+": "+e.message); }
+          FS.mkdir('/workdir/'+old_dir+'/'+subdirs[i]);
+        } catch(e) { console.log("Error while creating folder '"+subdirs[i]+"': "+e.message); }
         current_dir += "/"+subdirs[i];
       }
       break;
@@ -81,8 +87,18 @@ self.addEventListener('message', function(e) {
       var dir_name = data.file_name.substring(0,data.file_name.lastIndexOf("/")+1);
       console.log("base name = "+base_name+"; dir name = "+dir_name)
       try {
-        Module['FS_createDataFile']('/workdir/'+dir_name, base_name, data.file_data, true, true, true);
-      } catch(e) { console.log(base_name+": "+e.message); }
+        FS.writeFile('/workdir/'+dir_name+'/'+base_name, data.file_data);
+      } catch(e) { console.log("Error while loading '"+base_name+"': "+e.message); }
+      filesProcessed++;
+      self.postMessage({'files_processed': filesProcessed })
+      break;
+    case 'open':
+      console.log("open repository")
+      FS.chdir("VoiceRecognitionRPG")
+      jsgitopenrepo();
+      console.log("opened repository")
+      FS.chdir("/workdir")
+      self.postMessage("___OPENED___")
       break;
     default:
       self.postMessage('Unknown command: ' + data.msg);
@@ -92,8 +108,6 @@ self.addEventListener('message', function(e) {
 
 function baseName(str)
 {
-   var base = new String(str).substring(str.lastIndexOf('/') + 1); 
-    if(base.lastIndexOf(".") != -1)       
-        base = base.substring(0, base.lastIndexOf("."));
-   return base;
+  var base = new String(str).substring(str.lastIndexOf('/') + 1);
+  return base;
 }
