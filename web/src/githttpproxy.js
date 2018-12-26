@@ -1,5 +1,5 @@
 /**
- * Simple webserver with proxy to github.com
+ * Simple webserver with proxy to github.com. Used to bypass CORS for cloning.
  */
 
 const http = require('http');
@@ -15,6 +15,8 @@ const mimeTypes = {
     "css": "text/css",
     "wasm": "application/wasm"
 };
+
+var requestCount = 0;
 
 function onRequest(request, response) {
     let path = request.url.substring(1);
@@ -37,6 +39,8 @@ function onRequest(request, response) {
         request.pipe(proxy, {
             end: true
         });
+
+        requestCount++;
     } else {
         if(path === '') {
             path = 'index.html';

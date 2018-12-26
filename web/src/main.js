@@ -64,6 +64,11 @@ function cloneTest() {
   analyseRepo('https://github.com/BaronKhan/chip8Emulator');
 }
 
+function analyseUrl() {
+  var urlInput = document.getElementById("urlInput");
+  analyseRepo(urlInput.value);
+}
+
 function analyseRepo(url) {
   if (analysisInProgress)
     return false;
