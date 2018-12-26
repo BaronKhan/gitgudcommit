@@ -1,16 +1,17 @@
 const startTime = new Date().getTime();
-importScripts("libgit2.js");
 var started = false;
 var filesProcessed = 0;
+
+importScripts("libgit2.js");
+
 Module['onRuntimeInitialized'] = () => {
-    const dir="workdir";
-    FS.mkdir(dir,"0777");
-    FS.mount(IDBFS, {}, '/'+dir);
-    FS.chdir("/"+dir);     
-        
-    console.log('libgit2 ready in webworker.',(new Date().getTime() - startTime),'ms startup time');
-    jsgitinit();
-    started = true;
+  const dir="workdir";
+  FS.mkdir(dir,"0777");
+  FS.mount(IDBFS, {}, '/'+dir);
+  FS.chdir("/"+dir);
+  console.log('libgit2 ready in webworker.',(new Date().getTime() - startTime),'ms startup time');
+  jsgitinit();
+  started = true;
 };
 
 self.addEventListener('message', function(e) {
@@ -40,7 +41,7 @@ self.addEventListener('message', function(e) {
               .replace('<', 'lt;')
               .replace('>', 'gt;')
               .replace('#', 'hash;')
-              );
+            );
             jsonObj.message = jsonObj.message
               .replace('endl;', '\n')
               .replace('lt;', '<')
@@ -54,6 +55,7 @@ self.addEventListener('message', function(e) {
           }
         }
       } while(commit.includes("Merge pull request") || commit.includes("<UNKNOWN>"));
+      
       if (commit == "___NULL___") {
         self.postMessage("___NULL___")
       }
@@ -75,9 +77,8 @@ self.addEventListener('message', function(e) {
         if (subdirs[i] == "")
           continue;
         var old_dir = current_dir;
-        try {
-          FS.mkdir('/workdir/'+old_dir+'/'+subdirs[i]);
-        } catch(e) { console.log("Error while creating folder '"+subdirs[i]+"': "+e.message); }
+        try { FS.mkdir('/workdir/'+old_dir+'/'+subdirs[i]); }
+        catch(e) { console.log("Error while creating folder '"+subdirs[i]+"': "+e.message); }
         current_dir += "/"+subdirs[i];
       }
       break;
@@ -86,28 +87,24 @@ self.addEventListener('message', function(e) {
       var base_name = baseName(data.file_name);
       var dir_name = data.file_name.substring(0,data.file_name.lastIndexOf("/")+1);
       console.log("base name = "+base_name+"; dir name = "+dir_name)
-      try {
-        FS.writeFile('/workdir/'+dir_name+'/'+base_name, data.file_data);
-      } catch(e) { console.log("Error while loading '"+base_name+"': "+e.message); }
+      try { FS.writeFile('/workdir/'+dir_name+'/'+base_name, data.file_data); }
+      catch(e) { console.log("Error while loading '"+base_name+"': "+e.message); }
       filesProcessed++;
       self.postMessage({'files_processed': filesProcessed })
       break;
     case 'open':
-      console.log("open repository")
-      FS.chdir("VoiceRecognitionRPG")
-      jsgitopenrepo();
-      console.log("opened repository")
-      FS.chdir("/workdir")
-      self.postMessage("___OPENED___")
+      FS.chdir(data.repo_name);
+      try { jsgitopenrepo(); }
+      catch(e) { console.log("Error while opening repository: "+e.message); }
+      FS.chdir("/workdir");
+      self.postMessage("___OPENED___");
       break;
     default:
       self.postMessage('Unknown command: ' + data.msg);
   };
 }, false);
 
-
-function baseName(str)
-{
+function baseName(str) {
   var base = new String(str).substring(str.lastIndexOf('/') + 1);
   return base;
 }

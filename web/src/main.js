@@ -11,6 +11,7 @@ var cloneProgress = 0;
 var analysisProgress = 0;
 
 var fileCount = 0;
+var repoName = "";
 
 gitworker.addEventListener('message', function(e) {
   if (typeof e.data === 'object') {
@@ -22,8 +23,7 @@ gitworker.addEventListener('message', function(e) {
         analysisProgress = Math.min(analysisProgress+1, 50);
         getNextCommit();
       }
-    }
-    else if (e.data.hasOwnProperty('cloneprogress')) {
+    } else if (e.data.hasOwnProperty('cloneprogress')) {
       cloneProgress = e.data.cloneprogress;
       setProgressBar();
       if (parseInt(cloneProgress) >= 100 && getCommits) {
@@ -31,17 +31,17 @@ gitworker.addEventListener('message', function(e) {
         getCommits = false;
       }
       return; //Don't log the progress percentage
-    }
-    else if (e.data.hasOwnProperty('files_processed')) {
+    } else if (e.data.hasOwnProperty('files_processed')) {
       // console.log("fileCount = "+fileCount+"; files_processed = "+e.data.files_processed)
       if (fileCount > 0) {
         cloneProgress = Math.floor(e.data.files_processed*100)/fileCount;
         setProgressBar();
       }
       if (e.data.files_processed == fileCount) {
-        console.log("all files processed");
+        console.log("All files processed");
         gitworker.postMessage({
-          'cmd': 'open'
+          'cmd': 'open',
+          'repo_name': repoName
         })
       }
     }
@@ -163,53 +163,55 @@ uploadZip.onchange = function() {
   gitworker.postMessage({'cmd': 'resetcount'})
   var zip = new JSZip();
   fileCount = 0;
-  zip.loadAsync( this.files[0] /* = file blob */)
-     .then(function(contents) {
-        // process ZIP file content here
-        try {
-          var isRepo = false;
-          Object.keys(contents.files).forEach(function(filename) {
-            if (filename.includes(".git/")) {
-              // alert("This is a repo");
-              isRepo = true;
-              if (!filename.endsWith("/")) {
-                fileCount++;
-              }
-            }
-          });
+  zip.loadAsync(this.files[0]).then(function(contents) {
+    // process ZIP file content here
+    try {
+      var isRepo = false;
+      Object.keys(contents.files).forEach(function(filename) {
+        var pattern = ".git/";
+        if (filename.includes(pattern)) {
           if (!isRepo) {
-            throw new Error("The ZIP file does not contain a Git repository.");
+            repoName = filename.substr(0, filename.indexOf(pattern));
+            isRepo = true;
           }
-          else {
-            console.log("fileCount = "+fileCount)
-            //Create all the folders first, then the files
-            console.log("Creating folders")
-            Object.keys(contents.files).forEach(function(filename) {
-              if (filename.includes(".git/") && filename.endsWith("/")) {
-                zip.files[filename].async('uint8array').then(function (fileData) {
-                  // console.log(filename)
-                  gitworker.postMessage({
-                    'cmd': 'createfolder',
-                    'folder_name': filename});
-                });
-              }
-            });
-            console.log("Creating files")
-            Object.keys(contents.files).forEach(function(filename) {
-              if (filename.includes(".git/") && !filename.endsWith("/")) {
-                zip.files[filename].async('uint8array').then(function (fileData) {
-                  // console.log(filename)
-                  gitworker.postMessage({
-                    'cmd': 'createfile',
-                    'file_name': filename,
-                    'file_data': fileData});
-                });
-              }
-            });
+          if (!filename.endsWith("/")) {
+            fileCount++;
           }
         }
-        catch (e) {
-          alert("Error: "+e.message);
-        }
-     }, function() { alert("Not a valid zip file"); }); 
-};
+      });
+      if (!isRepo) {
+        throw new Error("The ZIP file does not contain a Git repository.");
+      }
+      else {
+        console.log("Extracting "+fileCount+" files")
+        //Create all the folders first, then the files
+        console.log("Creating folders")
+        Object.keys(contents.files).forEach(function(filename) {
+          if (filename.includes(".git/") && filename.endsWith("/")) {
+            zip.files[filename].async('uint8array').then(function (fileData) {
+              // console.log(filename)
+              gitworker.postMessage({
+                'cmd': 'createfolder',
+                'folder_name': filename});
+            });
+          }
+        });
+        console.log("Creating files")
+        Object.keys(contents.files).forEach(function(filename) {
+          if (filename.includes(".git/") && !filename.endsWith("/")) {
+            zip.files[filename].async('uint8array').then(function (fileData) {
+              // console.log(filename)
+              gitworker.postMessage({
+                'cmd': 'createfile',
+                'file_name': filename,
+                'file_data': fileData});
+            });
+          }
+        });
+      }
+    }
+    catch (e) {
+      alert("Error: "+e.message);
+    }
+  }, function() { alert("Not a valid zip file"); }); 
+}
