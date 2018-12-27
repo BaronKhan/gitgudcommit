@@ -1,13 +1,7 @@
 #!/bin/bash
 
-if [ ! -d ../deps ]; then
-  echo "execute in deps directory"
-  exit
-fi
-
-# if [ ! -d libgit2 ]; then
-#   git clone https://github.com/BaronKhan/libgit2
-# fi
+# Execute in script directory
+cd "$(dirname "$0")"
 
 if [ -z "$(ls -A libgit2)" ]; then
   echo "initialising libgit2 submodule"

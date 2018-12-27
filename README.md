@@ -14,13 +14,14 @@ Linux Tool
 ```
 $ sudo apt-get update
 $ sudo apt-get install libgit2-dev libtbb-dev
+$ cd linux
 $ make bin/gitgudcommit
 ```
 
 #### Usage
 
 ```
-$ bin/gitgudcommit <repository> <output file>
+$ linux/bin/gitgudcommit <repository> <output file>
 ```
 
 Web Tool
@@ -31,15 +32,14 @@ Web Tool
 ```
 $ sudo apt-get update
 $ sudo apt-get install libgit2-dev dos2unix nodejs
-$ cd web/deps
-$ ./build_deps.sh
+$ ./web/build_deps.sh
 ```
 
 #### Usage
 
 ```
-$ cd src
-$ node githttpproxy.js
+$ cd web/src
+$ node git_http_proxy.js
 ```
 
 The web server will be running at https://localhost:5000.

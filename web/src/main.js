@@ -69,13 +69,18 @@ function analyseUrl() {
   analyseRepo(urlInput.value);
 }
 
-function analyseRepo(url) {
-  if (analysisInProgress)
-    return false;
+function initCommitAnalysis() {
   analysisInProgress = true;
   getCommits = true;
   cloneProgress = 0;
   analysisProgress = 0;
+  setProgressBar();
+}
+
+function analyseRepo(url) {
+  if (analysisInProgress)
+    return false;
+  initCommitAnalysis();
   var dir_name = "";
   var regexp = /(https:\/\/|git@)github.com\/([a-zA-Z0-9\-\_\/]+|)/g;
   var match = regexp.exec(url);
@@ -164,10 +169,7 @@ function getProgressBar() {
 document.getElementById("uploadZip").onchange = function() {
   if (analysisInProgress)
     return;
-  analysisInProgress = true;
-  getCommits = true;
-  cloneProgress = 0;
-  analysisProgress = 0;
+  initCommitAnalysis();
   gitworker.postMessage({'cmd': 'resetcount'})
   var zip = new JSZip();
   fileCount = 0;
