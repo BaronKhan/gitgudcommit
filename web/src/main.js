@@ -83,7 +83,8 @@ function analyseRepo(url) {
     dir_name = match[2];
     clone(url, dir_name);
   } else {
-    console.log("Error: invalid URL");
+    alert("Error: Invalid GitHub URL");
+    analysisInProgress = false;
     return false;
   }
 }
@@ -147,8 +148,10 @@ function endWalk() {
 }
 
 function setProgressBar() {
-  var elem = document.getElementById("cloneProgressBar");   
-  elem.style.width = ((cloneProgress * 0.8) + (analysisProgress * 0.2)) + '%';
+  var elem = document.getElementById("cloneProgressBar");
+  var value = Math.ceil((cloneProgress * 0.8) + (analysisProgress * 0.2)) + '%';
+  elem.style.width = value;
+  elem.innerHTML = value;
 }
 
 function getProgressBar() {
@@ -158,7 +161,7 @@ function getProgressBar() {
 
 ////////////////////////////////////////////////////////////////////
 
-uploadZip.onchange = function() {
+document.getElementById("uploadZip").onchange = function() {
   if (analysisInProgress)
     return;
   analysisInProgress = true;
@@ -177,6 +180,8 @@ uploadZip.onchange = function() {
         if (filename.includes(pattern)) {
           if (!isRepo) {
             repoName = filename.substr(0, filename.indexOf(pattern));
+            var urlInput = document.getElementById("urlInput");
+            urlInput.value = repoName.substring(0, repoName.length - 1);
             isRepo = true;
           }
           if (!filename.endsWith("/")) {
