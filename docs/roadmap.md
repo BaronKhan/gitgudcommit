@@ -7,15 +7,14 @@ Roadmap duration: ~ 1 year
 - [ ] Perform basic commit checks
 - [ ] Add basic scoring system
 - [ ] Add basic testing framework
-- [ ] Create template for output
 - [ ] Rule-check for message information
-- [ ] Add score boards (monthly, all time)
+- [ ] Get scores by contributor
 - [ ] First release of web app *January 2019*
 - [ ] Check for references in message
 - [ ] Plan research paper
 - [ ] Choose TBB or OpenMP
 - [ ] Analyse commits in parallel
-- [ ] Train NLP model to generate commits automatically
+- [ ] Train NLP model to map keywords to filenames
 - [ ] Detect if change is a bug fix (use git blame to find previous line owner)
 - [ ] Create Unix command line tool ~ *May 2019*
 - [ ] Write research paper ~ *June 2019*
