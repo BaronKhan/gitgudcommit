@@ -27,7 +27,7 @@ function onRequest(request, response) {
   let path = request.url.substring(1);
 
   if (requestCount > requestLimit) {
-    console.log("Circuit breaker is active. Ignoring request for "+path);
+    console.log("Circuit breaker is active. Ignoring request for "+request.url);
   } else {
 
     if(path.indexOf('/') > -1) {
@@ -71,7 +71,11 @@ function onRequest(request, response) {
     }
 
     requestCount++;
-    setTimeout(function() {requestCount=0; }, requestBreakTime);
+    setTimeout(function() {
+      if (requestCount > requestLimit)
+        console.log("Deactivating circuit breaker");
+      requestCount=0;
+    }, requestBreakTime);
   }
 }
 
