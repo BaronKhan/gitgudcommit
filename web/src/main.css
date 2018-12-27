@@ -1,0 +1,9 @@
+pre {
+  background-color: #ddd;
+  padding: 5px;
+}
+
+#cloneProgress {
+  width: 100%;
+  background-color: #ddd;
+}

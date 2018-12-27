@@ -32,7 +32,6 @@ gitworker.addEventListener('message', function(e) {
       }
       return; //Don't log the progress percentage
     } else if (e.data.hasOwnProperty('files_processed')) {
-      // console.log("fileCount = "+fileCount+"; files_processed = "+e.data.files_processed)
       if (fileCount > 0) {
         cloneProgress = Math.floor(e.data.files_processed*100)/fileCount;
         setProgressBar();
@@ -75,6 +74,14 @@ function initCommitAnalysis() {
   cloneProgress = 0;
   analysisProgress = 0;
   setProgressBar();
+  var successAlert = document.getElementById("analyseSuccess");
+  if(successAlert != null) {
+    successAlert.remove();
+  }
+  var failureAlert = document.getElementById("analyseFailure");
+  if(failureAlert != null) {
+    failureAlert.remove();
+  }
 }
 
 function analyseRepo(url) {
@@ -88,8 +95,9 @@ function analyseRepo(url) {
     dir_name = match[2];
     clone(url, dir_name);
   } else {
-    alert("Error: Invalid GitHub URL");
+    createFailureAlert("Invalid GitHub URL.");
     analysisInProgress = false;
+    hideProgressBar();
     return false;
   }
 }
@@ -157,11 +165,50 @@ function setProgressBar() {
   var value = Math.ceil((cloneProgress * 0.8) + (analysisProgress * 0.2)) + '%';
   elem.style.width = value;
   elem.innerHTML = value;
+
+  var block = document.getElementById("cloneProgress");
+  if (analysisInProgress)
+    block.style.display = "";
+  if (value == "100%") {
+    setTimeout(function(){
+      block.style.display = "none";
+      createSuccessAlert("The Git repository has been analysed.");
+    }, 3000);
+  }
+}
+
+function hideProgressBar() {
+  var block = document.getElementById("cloneProgress");
+  block.style.display = "none";
 }
 
 function getProgressBar() {
   var elem = document.getElementById("cloneProgressBar");   
   return elem.style.width;
+}
+
+function createSuccessAlert(text) {
+  if(document.getElementById("analyseSuccess") == null) {
+    var successAlert = document.createElement("div");
+    successAlert.id = "analyseSuccess";
+    successAlert.className="alert alert-success alert-dismissible fade in";
+    successAlert.innerHTML="<a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a>\
+                            <strong>Success!</strong> "+text;
+    var panelRepo = document.getElementById("panelRepo");
+    panelRepo.appendChild(successAlert);
+  }
+}
+
+function createFailureAlert(text) {
+  if(document.getElementById("analyseFailure") == null) {
+    var failureAlert = document.createElement("div");
+    failureAlert.id = "analyseFailure";
+    failureAlert.className="alert alert-danger alert-dismissible fade in";
+    failureAlert.innerHTML="<a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a>\
+                            <strong>Error:</strong> "+text;
+    var panelRepo = document.getElementById("panelRepo");
+    panelRepo.appendChild(failureAlert);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -186,9 +233,10 @@ document.getElementById("uploadZip").onchange = function() {
             urlInput.value = repoName.substring(0, repoName.length - 1);
             isRepo = true;
           }
-          if (!filename.endsWith("/")) {
-            fileCount++;
-          }
+        }
+
+        if (!filename.endsWith("/")) {
+          fileCount++;
         }
       });
       if (!isRepo) {
@@ -199,7 +247,7 @@ document.getElementById("uploadZip").onchange = function() {
         //Create all the folders first, then the files
         console.log("Creating folders")
         Object.keys(contents.files).forEach(function(filename) {
-          if (filename.includes(".git/") && filename.endsWith("/")) {
+          if (/*filename.includes(".git/") && */filename.endsWith("/")) {
             zip.files[filename].async('uint8array').then(function (fileData) {
               // console.log(filename)
               gitworker.postMessage({
@@ -210,7 +258,7 @@ document.getElementById("uploadZip").onchange = function() {
         });
         console.log("Creating files")
         Object.keys(contents.files).forEach(function(filename) {
-          if (filename.includes(".git/") && !filename.endsWith("/")) {
+          if (/*filename.includes(".git/") && */!filename.endsWith("/")) {
             zip.files[filename].async('uint8array').then(function (fileData) {
               // console.log(filename)
               gitworker.postMessage({
@@ -223,7 +271,13 @@ document.getElementById("uploadZip").onchange = function() {
       }
     }
     catch (e) {
-      alert("Error: "+e.message);
+      createFailureAlert(e.message);
+      analysisInProgress = false;
+      hideProgressBar();
     }
-  }, function() { alert("Not a valid zip file"); }); 
+  }, function() {
+    createFailureAlert("ZIP file does not contain a Git Repository.");
+    analysisInProgress = false;
+    hideProgressBar();
+  }); 
 }
