@@ -18,7 +18,7 @@ const mimeTypes = {
 };
 
 // Maximum 100 requests every minute; else activate circuit breaker
-const requestLimit = 100*14; //12 for loading page + 2 for GitHub proxy
+const requestLimit = 100*15; //13 for loading page + 2 for GitHub proxy
 const requestBreakTime = 60*1000;
 
 var requestCount = 0;

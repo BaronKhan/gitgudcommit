@@ -13,6 +13,8 @@ var analysisProgress = 0;
 var fileCount = 0;
 var repoName = "";
 
+resizeUrlBox();
+
 gitworker.addEventListener('message', function(e) {
   if (typeof e.data === 'object') {
     if (e.data.hasOwnProperty('author')) {
@@ -49,6 +51,7 @@ gitworker.addEventListener('message', function(e) {
       removeSuccessAlert();
       createFailureAlert(e.data.___ERROR___);
       analysisInProgress = false;
+      hideProgressBar();
     }
   } else if (e.data == "___NULL___") {
     if (analysisInProgress) {
@@ -112,11 +115,16 @@ function walkCommits() {
 
 function analyseCommits() {
   console.log("Analysing commits...");
-  if (commits.length < 1)
-    return true;
+  if (commits.length < 1) {
+    createFailureAlert("The repository has no commits.");
+    analysisInProgress = false;
+    hideProgressBar();
+    return;
+  }
   var numCommits = commits.length;
   console.log("Total commits: "+numCommits);
   for (i=0; i<numCommits; i++) {
+    var commit = commits[i];
     analysisProgress = 50 + Math.ceil(((i+1)*50.0)/numCommits);
     setProgressBar();
   }
@@ -168,19 +176,24 @@ function setProgressBar() {
   elem.innerHTML = value;
 
   var block = document.getElementById("cloneProgress");
+  var loading = document.getElementById("loadingImg");
   if (analysisInProgress)
     block.style.display = "";
+    loading.style.display = "";
   if (value == "100%") {
     setTimeout(function(){
       block.style.display = "none";
+      loading.style.display = "none";
       createSuccessAlert("The Git repository has been analysed.");
-    }, 3000);
+    }, 1000);
   }
 }
 
 function hideProgressBar() {
   var block = document.getElementById("cloneProgress");
+  var loading = document.getElementById("loadingImg");
   block.style.display = "none";
+  loading.style.display = "none";
 }
 
 function getProgressBar() {
@@ -226,80 +239,15 @@ function removeFailureAlert() {
   }
 }
 
-////////////////////////////////////////////////////////////////////
+$(window).resize(function() {
+  resizeUrlBox();
+});
 
-document.getElementById("uploadZip").onchange = function() {
-  if (analysisInProgress)
-    return;
-  initCommitAnalysis();
-  gitworker.postMessage({'cmd': 'resetcount'})
-  var zip = new JSZip();
-  fileCount = 0;
-
-  try {
-
-    if(this.files[0].size > 1073741824){
-       throw new Error("File is too big! The maximum file size is 1 GB.");
-    };
-
-    zip.loadAsync(this.files[0]).then(function(contents) {
-      // process ZIP file content here
-        var isRepo = false;
-        Object.keys(contents.files).forEach(function(filename) {
-          var pattern = ".git/";
-          if (filename.includes(pattern)) {
-            if (!isRepo) {
-              repoName = filename.substr(0, filename.indexOf(pattern));
-              var urlInput = document.getElementById("urlInput");
-              urlInput.value = repoName.substring(0, repoName.length - 1);
-              isRepo = true;
-            }
-          }
-
-          if (!filename.endsWith("/")) {
-            fileCount++;
-          }
-        });
-        if (!isRepo) {
-          throw new Error("The ZIP file does not contain a Git repository.");
-        }
-        else {
-          console.log("Extracting "+fileCount+" files")
-          //Create all the folders first, then the files
-          console.log("Creating folders")
-          Object.keys(contents.files).forEach(function(filename) {
-            if (/*filename.includes(".git/") && */filename.endsWith("/")) {
-              zip.files[filename].async('uint8array').then(function (fileData) {
-                // console.log(filename)
-                gitworker.postMessage({
-                  'cmd': 'createfolder',
-                  'folder_name': filename});
-              });
-            }
-          });
-          console.log("Creating files")
-          Object.keys(contents.files).forEach(function(filename) {
-            if (/*filename.includes(".git/") && */!filename.endsWith("/")) {
-              zip.files[filename].async('uint8array').then(function (fileData) {
-                // console.log(filename)
-                gitworker.postMessage({
-                  'cmd': 'createfile',
-                  'file_name': filename,
-                  'file_data': fileData});
-              });
-            }
-          });
-        }
-    }, function() {
-      createFailureAlert("ZIP file does not contain a Git Repository.");
-      this.value = "";
-      analysisInProgress = false;
-      hideProgressBar();
-    });
-  } catch (e) {
-    createFailureAlert(e.message);
-    this.value = "";
-    analysisInProgress = false;
-    hideProgressBar();
+function resizeUrlBox() {
+  var urlInput = document.getElementById("urlInput");
+  if ($(window).width() < 770) {
+    urlInput.style.width=(document.body.offsetWidth-2)+"px"; //I have no idea if this is valid but it seems to work.
+  } else {
+    urlInput.style.width="358px";
   }
 }
