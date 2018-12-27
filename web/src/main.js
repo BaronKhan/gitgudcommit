@@ -33,6 +33,7 @@ gitworker.addEventListener('message', function(e) {
       return; //Don't log the progress percentage
     } else if (e.data.hasOwnProperty('files_processed')) {
       if (fileCount > 0) {
+        //NB: clone progress is file processed here
         cloneProgress = Math.floor(e.data.files_processed*100)/fileCount;
         setProgressBar();
       }
@@ -43,6 +44,11 @@ gitworker.addEventListener('message', function(e) {
           'repo_name': repoName
         })
       }
+    } else if (e.data.hasOwnProperty("___ERROR___")) {
+      removeFailureAlert();
+      removeSuccessAlert();
+      createFailureAlert(e.data.___ERROR___);
+      analysisInProgress = false;
     }
   } else if (e.data == "___NULL___") {
     if (analysisInProgress) {
@@ -74,14 +80,8 @@ function initCommitAnalysis() {
   cloneProgress = 0;
   analysisProgress = 0;
   setProgressBar();
-  var successAlert = document.getElementById("analyseSuccess");
-  if(successAlert != null) {
-    successAlert.remove();
-  }
-  var failureAlert = document.getElementById("analyseFailure");
-  if(failureAlert != null) {
-    failureAlert.remove();
-  }
+  removeSuccessAlert();
+  removeFailureAlert();
 }
 
 function analyseRepo(url) {
@@ -194,7 +194,7 @@ function createSuccessAlert(text) {
     successAlert.id = "analyseSuccess";
     successAlert.className="alert alert-success alert-dismissible fade in text-center";
     successAlert.innerHTML="<a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a>\
-                            <strong>Success!</strong> "+text;
+                            <strong>Success!</strong> " + text;
     var panelRepo = document.getElementById("panelRepo");
     panelRepo.appendChild(successAlert);
   }
@@ -206,9 +206,23 @@ function createFailureAlert(text) {
     failureAlert.id = "analyseFailure";
     failureAlert.className="alert alert-danger alert-dismissible fade in text-center";
     failureAlert.innerHTML="<a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a>\
-                            <strong>Error:</strong> "+text;
+                            <strong>Error:</strong> " + text;
     var panelRepo = document.getElementById("panelRepo");
     panelRepo.appendChild(failureAlert);
+  }
+}
+
+function removeSuccessAlert() {
+  var successAlert = document.getElementById("analyseSuccess");
+  if(successAlert != null) {
+    successAlert.remove();
+  }
+}
+
+function removeFailureAlert() {
+  var failureAlert = document.getElementById("analyseFailure");
+  if(failureAlert != null) {
+    failureAlert.remove();
   }
 }
 
