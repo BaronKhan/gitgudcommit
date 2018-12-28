@@ -10,21 +10,21 @@ namespace GitGud
   class Commit
   {
   private:
-    std::string         m_author;
-    std::string         m_email;
-    std::string         m_message;
-    long long           m_timestamp;
-    Ast                 *m_ast;
+    const std::string         m_author;
+    const std::string         m_email;
+    const std::string         m_message;
+    const long long           m_timestamp;
+    Ast                      *m_ast;
 
   public:
     Commit(
-      std::string author, std::string email,
-      std::string message, long long timestamp
+      const std::string &author, const std::string &email,
+      const std::string &message, long long timestamp
     );
 
-    std::string & getAuthor();
-    std::string & getEmail();
-    std::string & getMessage();
+    const std::string & getAuthor() const;
+    const std::string & getEmail() const;
+    const std::string & getMessage() const;
     long long getTimestamp() const;
     Ast * getAst() const;
 

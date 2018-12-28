@@ -5,8 +5,8 @@ namespace GitGud
 {
 
   Commit::Commit(
-    std::string author, std::string email,
-    std::string message, long long timestamp
+    const std::string &author, const std::string &email,
+    const std::string &message, long long timestamp
   )
   : m_author(author), m_email(email), 
     m_message(message), m_timestamp(timestamp)
@@ -17,21 +17,21 @@ namespace GitGud
 
   //////////////////////////////////////////////////////////////////////////////
 
-  std::string & Commit::getAuthor()
+  const std::string & Commit::getAuthor() const
   {
     return m_author;
   }
 
   //////////////////////////////////////////////////////////////////////////////
 
-  std::string & Commit::getEmail()
+  const std::string & Commit::getEmail() const
   {
     return m_email;
   }
 
   //////////////////////////////////////////////////////////////////////////////
 
-  std::string & Commit::getMessage()
+  const std::string & Commit::getMessage() const
   {
     return m_message;
   }
