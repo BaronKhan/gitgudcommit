@@ -10,7 +10,7 @@ namespace GitGud
   class MessageNode
   {
   public:
-    virtual std::string getData() const = 0;
+    virtual const std::string & getData() = 0;
     virtual ~MessageNode() {}
   };
 
@@ -20,18 +20,20 @@ namespace GitGud
   private:
     std::vector<MessageNode*> m_nodes;
   public:
+    static std::vector<std::string> split(const std::string &s, char delim);
+
     void parseMessage(const std::string &message);
   };
 
-  class HeadNode : public MessageNode
+  class TitleNode : public MessageNode
   {
   private:
     std::string m_title;
 
   public:
-    HeadNode(const std::string &title);
+    TitleNode(const std::string &title);
 
-    virtual std::string & getData();
+    virtual const std::string & getData();
   };
 
 }
