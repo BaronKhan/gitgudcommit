@@ -6,13 +6,26 @@ Architecture Overview
 
 # Repo Manager
 * Handles the repository
-
-## Training Manager
-* Handles the training of models on the repo to generate messages
-* Use `--train` command line flag to train on current repo
-* Approximate training time based on number of total commits
-* If no models trained, use default, general models
+* Holds a reference/pointer to the Git repository
+* Contains a Commit Manager, Log Manager and Training Manager
 
 ## Commit Manager
-* Handles the creation of the new commit message
+* Handles the creation/editing of a new commit message
+* Acts a a replacement for the `git commit` command
 * Accesses the Git message handler and edits it before committing
+
+### Commit
+* A Commit instance is a single Git commit
+* Contains all the metadata of the commit (message, author, timestamp, etc)
+
+## Log Manager
+* Outputs the scores of all commits in the repository
+* Retrieves all of the commits sequentially
+* Uses Intel TBB, OpenMP or cpp-taskflow to calculate scores in parallel
+* Multithreading required due to intensive use of POS-tagger
+
+## Training Manager
+* Handles the training of the keyword mapping and saves result to a JSON file
+* Able to load a JSON file if it exists (also add JSON file to .gitignore)
+* Use `--train` command line flag to train on current repo
+* Approximate training time based on number of total commits

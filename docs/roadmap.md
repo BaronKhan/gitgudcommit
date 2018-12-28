@@ -10,9 +10,7 @@ Roadmap duration: ~ 1 year
 - [ ] Rule-check for message information
 - [ ] Get scores by contributor
 - [ ] First release of web app *January 2019*
-- [ ] Check for references in message
-- [ ] Plan research paper
-- [ ] Choose TBB or OpenMP
+- [ ] Choose TBB or OpenMP to process commits in parallel in Linux tool
 - [ ] Analyse commits in parallel
 - [ ] Train NLP model to map keywords to filenames
 - [ ] Detect if change is a bug fix (use git blame to find previous line owner)
