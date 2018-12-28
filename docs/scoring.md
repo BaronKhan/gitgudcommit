@@ -13,6 +13,11 @@ Checks
 - Bullet point width
 - Spell check
 
+Note that a keyword can map to multiple files, so when considering if a keyword
+is correctly used, make sure several of its files are mentioned (otherwise, just
+the single filename should be mentioned). Also note that a keyword can be multiple
+words.
+
 Algorithm
 ---
 
