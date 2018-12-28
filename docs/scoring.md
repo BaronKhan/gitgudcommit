@@ -17,3 +17,9 @@ Algorithm
 ---
 
 TBD
+
+Testing
+---
+
+Use test cases from xkcd comic image in README.md to verify correctness using
+thresholds.

@@ -7,3 +7,9 @@ Functional Requirements
 - Messages are pre-generated based on a template (e.g. pre-pending JIRA ID)
 - Before committing, check message score, list suggestions and final score
 - Also have a `--log` option to list the scores of each commit in the repo with `less`
+
+Extension
+---
+
+- Read a JSON file containing a mapping of keywords to files
+- Train a list of keywords mapping to files and store in a JSON file
