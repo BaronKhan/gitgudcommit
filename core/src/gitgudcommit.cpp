@@ -11,8 +11,7 @@ namespace GitGud
   : m_author(author), m_email(email), 
     m_message(message), m_timestamp(timestamp)
   {
-    m_ast = new Ast();
-    m_ast->parseMessage(m_message);
+    m_ast = new Ast(message);
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -54,7 +53,7 @@ namespace GitGud
 
   double Commit::getCommitScore() const
   {
-    return 10.0;
+    return m_ast->getCommitScore();
   }
 
 }

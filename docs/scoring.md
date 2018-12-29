@@ -4,6 +4,9 @@ Scoring Theory
 Checks
 ---
 
+A commit message is given a score out of 5, and is a average score of all the
+rule checks below.
+
 - Title width
 - Title and body separation
 - Body width
@@ -12,6 +15,7 @@ Checks
 - Any bullet points start with a dash followed by a space
 - Bullet point width
 - Spell check
+- Reference to issue or JIRA ID
 
 Note that a keyword can map to multiple files, so when considering if a keyword
 is correctly used, make sure several of its files are mentioned (otherwise, just
