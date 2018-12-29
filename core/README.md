@@ -7,7 +7,7 @@ The test harness uses the [Google Test](https://www.eriksmistad.no/getting-start
 framework which must be installed. Below are the steps to install it:
 
 ```
-$ sudo apt-get install libgtest-dev cmake
+$ sudo apt-get install libgtest-dev cmake dos2unix
 $ cd /usr/src/gtest
 $ sudo cmake CMakeLists.txt
 $ sudo make
