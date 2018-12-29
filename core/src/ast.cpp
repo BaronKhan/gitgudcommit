@@ -31,7 +31,7 @@ namespace GitGud
   void Ast::parseMessage(const std::string &message)
   {
     std::vector<std::string> lines = Ast::split(message, '\n');
-    MessageNode* title_node = new TitleNode(this, lines[0]);
+    MessageNode* title_node = new SummaryNode(this, lines[0]);
     m_nodes.push_back(title_node);
   }
 
@@ -97,36 +97,36 @@ namespace GitGud
 
   //////////////////////////////////////////////////////////////////////////////
 
-  TitleNode::TitleNode(Ast *owner, const std::string &title)
-  : MessageNode(owner), m_title(title)
+  SummaryNode::SummaryNode(Ast *owner, const std::string &title)
+  : MessageNode(owner), m_summary(title)
   {
   }
 
   //////////////////////////////////////////////////////////////////////////////
 
-  const std::string & TitleNode::getData()
+  const std::string & SummaryNode::getData()
   {
-    return m_title;
+    return m_summary;
   }
 
   //////////////////////////////////////////////////////////////////////////////
 
-  double TitleNode::getScore() const
+  double SummaryNode::getScore() const
   {
-    if (m_title.length() < 1)
+    if (m_summary.length() < 1)
       return 0.0;
 
     double score = 0.0;
 
-    if (m_title.length() <= 72)
-      score += 1.0;
+    if (m_summary.length() <= 72)
+      score += 2.0;
     else
       addSuggestion(1, "Length of summary is greater than 72 character.");
 
-    if (isupper(m_title[0]))  // OR if begins with a file name
+    if (isupper(m_summary[0]))  // TODO: OR if begins with a file name
       score += 1.0;
     else
-      addSuggestion(1, "Summary should begin with a capital letter or object name.");
+      addSuggestion(1, "Summary should begin with a capital letter or filename.");
 
     return score;
   }

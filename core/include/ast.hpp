@@ -48,13 +48,13 @@ namespace GitGud
     virtual ~MessageNode() {}
   };
 
-  class TitleNode : public MessageNode
+  class SummaryNode : public MessageNode
   {
   private:
-    std::string m_title;
+    std::string m_summary;
 
   public:
-    TitleNode(Ast *owner, const std::string &title);
+    SummaryNode(Ast *owner, const std::string &title);
 
     virtual const std::string & getData();
     virtual double getScore() const;
