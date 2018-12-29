@@ -119,12 +119,12 @@ namespace GitGud
     double score = 0.0;
 
     if (m_summary.length() <= 72)
-      score += 2.0;
+      score += 3.0;
     else
       addSuggestion(1, "Length of summary is greater than 72 character.");
 
     if (isupper(m_summary[0]))  // TODO: OR if begins with a file name
-      score += 1.0;
+      score += 2.0;
     else
       addSuggestion(1, "Summary should begin with a capital letter or filename.");
 

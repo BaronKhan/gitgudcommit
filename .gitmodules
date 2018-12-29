@@ -1,3 +1,6 @@
 [submodule "web/deps/libgit2"]
 	path = web/deps/libgit2
 	url = https://github.com/BaronKhan/libgit2
+[submodule "core/deps/citar-cxx"]
+	path = core/deps/citar-cxx
+	url = https://github.com/BaronKhan/citar-cxx
