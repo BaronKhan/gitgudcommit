@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <algorithm>
 #include <gtest/gtest.h>
 #include "gitgudcommit.hpp"
 #include "ast.hpp"
@@ -25,4 +26,24 @@ TEST(PosTagger, TagsSize)
 {
   const std::string test = "A sentence with 5 tags";
   EXPECT_EQ(5, GitGud::Tagger::getInstance().tagSentence(test).size());
+}
+
+TEST(PosTagger, VerbPastParticiple)
+{
+  std::vector<std::string> tests { "Added", "Updated", "Created" };
+  for (auto &test : tests)
+  {
+    std::vector<std::string> v = GitGud::Tagger::getInstance().tagSentence(test);
+    EXPECT_TRUE(std::find(v.begin(), v.end(), "VBN") != v.end());
+  }
+}
+
+TEST(PosTagger, VerbPresent)
+{
+  std::vector<std::string> tests { "Add", "Update", "Create" };
+  for (auto &test : tests)
+  {
+    std::vector<std::string> v = GitGud::Tagger::getInstance().tagSentence(test);
+    EXPECT_TRUE(std::find(v.begin(), v.end(), "VB") != v.end());
+  }
 }
