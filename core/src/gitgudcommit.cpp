@@ -1,3 +1,4 @@
+#include <vector>
 #include "gitgudcommit.hpp"
 #include "ast.hpp"
 
@@ -54,6 +55,12 @@ namespace GitGud
   double Commit::getCommitScore() const
   {
     return m_ast->getCommitScore();
+  }
+
+
+  std::vector<std::pair<unsigned, std::string>> & Commit::getSuggestions()
+  {
+    return m_ast->getSuggestions();
   }
 
 }

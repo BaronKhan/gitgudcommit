@@ -2,6 +2,7 @@
 #define GITGUDCOMMIT_HPP_
 
 #include <string>
+#include <vector>
 #include "ast.hpp"
 
 namespace GitGud
@@ -29,6 +30,7 @@ namespace GitGud
     Ast * getAst() const;
 
     double getCommitScore() const;
+    std::vector<std::pair<unsigned, std::string>> & getSuggestions();
   };
 
 }

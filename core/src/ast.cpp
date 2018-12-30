@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cctype>
 #include "ast.hpp"
+#include "tagger.hpp"
 
 namespace GitGud
 {
@@ -51,6 +52,14 @@ namespace GitGud
   std::vector<MessageNode*> & Ast::getNodes()
   {
     return m_nodes;
+  }
+
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  std::vector<std::pair<unsigned, std::string>> & Ast::getSuggestions()
+  {
+    return m_suggestions;
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -115,19 +124,36 @@ namespace GitGud
     if (m_summary.length() < 1)
       return 0.0;
 
-    double score = 0.0;
+    double score = 5.0;
 
-    if (m_summary.length() <= 72)
-      score += 3.0;
-    else
+    if (m_summary.length() > 72)
+    {
       addSuggestion(1, "Length of summary is greater than 72 character.");
+      score -= 2.0;
+    }
 
-    if (isupper(m_summary[0]))  // TODO: OR if begins with a file name
-      score += 2.0;
-    else
+    if (!isupper(m_summary[0]))  // TODO: OR if begins with a file name
+    {
       addSuggestion(1, "Summary should begin with a capital letter or filename.");
+      score -= 1.0;
+    }
 
-    return score;
+    auto words = Tagger::getInstance().sentence2Vec(m_summary);
+    auto tags = Tagger::getInstance().tagSentence(words);
+    auto tags_size = tags.size();
+    for (unsigned i=0; i<tags_size; ++i)
+    {
+      auto tag = tags[i];
+      if (tag.find("VBN") != std::string::npos || tag.find("VBD") != std::string::npos)
+      {
+        std::stringstream ss;
+        ss << "\"" << words[i] << "\" - consider using the present tense form.";
+        addSuggestion(1, ss.str());
+        score -= 1.0/tags_size;
+      }
+    }
+
+    return std::max(0.0, score);
   }
 
 }

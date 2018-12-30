@@ -47,3 +47,9 @@ TEST(PosTagger, VerbPresent)
     EXPECT_TRUE(std::find(v.begin(), v.end(), "VB") != v.end());
   }
 }
+
+TEST(Summary, Suggestions)
+{
+  GitGud::Commit commit("", "", "added a bad sumary", 0);
+  EXPECT_GE(2, commit.getSuggestions().size());
+}

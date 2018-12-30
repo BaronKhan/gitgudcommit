@@ -26,6 +26,7 @@ namespace GitGud
     Ast(const std::string &message);
 
     std::vector<MessageNode*> & getNodes();
+    std::vector<std::pair<unsigned, std::string>> & getSuggestions();
     double getCommitScore();
     void addSuggestion(unsigned line_number, const std::string & suggestion);
 
