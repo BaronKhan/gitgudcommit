@@ -1,7 +1,7 @@
 #ifndef GITGUDCOMMIT_HPP_
 #define GITGUDCOMMIT_HPP_
-#include <string>
 
+#include <string>
 #include "ast.hpp"
 
 namespace GitGud

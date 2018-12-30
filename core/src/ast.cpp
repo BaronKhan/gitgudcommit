@@ -1,7 +1,6 @@
 #include <sstream>
 #include <algorithm>
 #include <cctype>
-
 #include "ast.hpp"
 
 namespace GitGud
