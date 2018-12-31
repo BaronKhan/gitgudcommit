@@ -1,8 +1,13 @@
-const gitworker = new Worker("git_worker.js");
 const coreworker = new Worker("core_worker.js");
+const gitworker = new Worker("git_worker.js");
 
 var currentCommit = {};
 var commits = [];
+
+// Each index corresponds to the commit element above
+var scores = [];
+var suggestions = [];
+var line_numbers = [];
 
 var getCommits = false;
 var analysisInProgress = false;
@@ -15,6 +20,28 @@ var fileCount = 0;
 var repoName = "";
 
 resizeUrlBox();
+
+coreworker.addEventListener('message', function(e) {
+  var data = e.data;
+  switch (data.type) {
+    case "score":
+      scores.push(data.data);
+      break;
+    case "suggestions":
+      suggestions.push(data.data);
+      break;
+    case "line_numbers":
+      line_numbers.push(data.data);
+      break;
+  }
+  analysisProgress = 50 + Math.ceil(((scores.length)*50.0)/commits.length);
+  setProgressBar();
+  if (commits.length == scores.length && commits.length == suggestions.length
+        && commits.length == line_numbers.length) {
+    console.log("All commits have been analysed");
+    analysisInProgress = false;
+  }
+}, false);
 
 gitworker.addEventListener('message', function(e) {
   if (typeof e.data === 'object') {
@@ -124,13 +151,12 @@ function analyseCommits() {
   }
   var numCommits = commits.length;
   console.log("Total commits: "+numCommits);
+  analysisProgress = 50;
   for (i=0; i<numCommits; i++) {
     var commit = commits[i];
-    analysisProgress = 50 + Math.ceil(((i+1)*50.0)/numCommits);
-    setProgressBar();
+    coreworker.postMessage({ 'cmd': 'analyse', 'commit': commit })
   }
-  console.log("Finished analysing commits");
-  analysisInProgress = false;
+  console.log("Commits sent to core worker");
 }
 
 function clone(url, dir_name) {
@@ -159,6 +185,10 @@ function chdir(dir_name) {
 function startWalk() {
   gitworker.postMessage({'cmd': 'startwalk'});
   commits = [];
+  analysedCommits = [];
+  scores = [];
+  suggestions = [];
+  line_numbers = [];
   finishedWalk = false;
 }
 

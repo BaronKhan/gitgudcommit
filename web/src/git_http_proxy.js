@@ -17,8 +17,8 @@ const mimeTypes = {
   "wasm": "application/wasm"
 };
 
-// Maximum 100 requests every minute; else activate circuit breaker
-const requestLimit = 100*15; //13 for loading page + 2 for GitHub proxy
+// Maximum 10 requests every minute; else activate circuit breaker
+const requestLimit = 10*20;
 const requestBreakTime = 60*1000;
 
 var requestCount = 0;
@@ -27,6 +27,8 @@ function onRequest(request, response) {
   let path = request.url.substring(1);
 
   if (requestCount > requestLimit) {
+    response.statusCode = 503;
+    response.end('');
     console.log("Circuit breaker is active. Ignoring request for "+request.url);
   } else {
 

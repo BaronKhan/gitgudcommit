@@ -1,17 +1,13 @@
 #!/bin/bash
 cd "$(dirname "$0")"
 
-if [ ! -f src/libgit2.js ]; then
-  echo "building libgit2.js and libgit2.wasm"
-  ./deps/build-deps.sh
-fi
+echo "building libgit2.js and libgit2.wasm"
+./deps/build-deps.sh
 echo "built libgit2.js and libgit2.wasm"
 
-if [ ! -f ../core/lib/libcitar_web.a ]; then
-  echo "building libcitar_web.a"
-  ./../core/deps/build-deps.sh
-  echo "built libcitar_web.a"
-fi
+echo "building libcitar_web.a"
+./../core/deps/build-deps.sh
+echo "built libcitar_web.a"
 
 echo "building gitgudcore.js, gitgudcore.wasm and gitgudcore.data"
 

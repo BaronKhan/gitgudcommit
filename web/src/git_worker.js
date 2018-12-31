@@ -100,7 +100,7 @@ self.addEventListener('message', function(e) {
       self.postMessage("___OPENED___");
       break;
     default:
-      self.postMessage('Unknown command: ' + data.msg);
+      self.postMessage('Unknown command: ' + data.cmd);
   };
 }, false);
 
