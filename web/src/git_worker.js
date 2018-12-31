@@ -69,24 +69,24 @@ self.addEventListener('message', function(e) {
       break;
     case 'createfolder':
       var dir_name = data.folder_name;
-      console.log(dir_name)
+      // console.log(dir_name)
       subdirs = dir_name.split("/");
-      console.log("subdirs = "+subdirs+" ("+subdirs.length+")")
+      // console.log("subdirs = "+subdirs+" ("+subdirs.length+")")
       var current_dir = "";
       for (var i = 0; i<subdirs.length; i++) {
         if (subdirs[i] == "")
           continue;
         var old_dir = current_dir;
         try { FS.mkdir('/workdir/'+old_dir+'/'+subdirs[i]); }
-        catch(e) { console.log("Error while creating folder '"+subdirs[i]+"': "+e.message); }
+        catch(e) { /*console.log("Error while creating folder '"+subdirs[i]+"': "+e.message);*/ }
         current_dir += "/"+subdirs[i];
       }
       break;
     case 'createfile':
-      console.log("Creating file with name: "+data.file_name)
+      // console.log("Creating file with name: "+data.file_name)
       var base_name = baseName(data.file_name);
       var dir_name = data.file_name.substring(0,data.file_name.lastIndexOf("/")+1);
-      console.log("base name = "+base_name+"; dir name = "+dir_name)
+      // console.log("base name = "+base_name+"; dir name = "+dir_name)
       try { FS.writeFile('/workdir/'+dir_name+'/'+base_name, data.file_data); }
       catch(e) { console.log("Error while loading '"+base_name+"': "+e.message); }
       filesProcessed++;

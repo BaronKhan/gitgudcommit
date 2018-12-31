@@ -107,9 +107,16 @@ function analyseUrl() {
 
 function initCommitAnalysis() {
   analysisInProgress = true;
+  currentCommit = {};
+  commits = [];
+  scores = [];
+  suggestions = [];
+  line_numbers = [];
   getCommits = true;
   cloneProgress = 0;
   analysisProgress = 0;
+  fileCount = 0;
+  repoName = "";
   setProgressBar();
   removeSuccessAlert();
   removeFailureAlert();

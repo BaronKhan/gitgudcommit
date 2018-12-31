@@ -14,7 +14,7 @@ self.addEventListener('message', function(e) {
   switch (data.cmd) {
     case "analyse":
       var commit = data.commit;
-      var analysedCommit = new Module.Commit(commit.author, commit.email, commit.message, 0);
+      var analysedCommit = new Module.Commit(commit.author, commit.email, commit.message, parseInt(commit.time));
       self.postMessage({ 'type': 'score', 'data': analysedCommit.getCommitScore() })
       var suggestions = [];
       var suggestions_raw = analysedCommit.getSuggestionsMessages();
