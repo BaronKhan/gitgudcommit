@@ -66,16 +66,9 @@ namespace GitGud
 
   //////////////////////////////////////////////////////////////////////////////
 
-  std::vector<std::string> Commit::getSuggestionsMessages()
+  std::vector<std::string> Commit::getSuggestionsFull()
   {
-    return m_ast->getSuggestionsMessages();
-  }
-
-  //////////////////////////////////////////////////////////////////////////////
-
-  std::vector<unsigned> Commit::getSuggestionsLines()
-  {
-    return m_ast->getSuggestionsLines();
+    return m_ast->getSuggestionsFull();
   }
 
 }

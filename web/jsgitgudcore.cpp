@@ -30,8 +30,7 @@ EMSCRIPTEN_BINDINGS(my_module) {
     .property("message", &GitGud::Commit::getMessage)
     .property("timestamp", &GitGud::Commit::getTimestamp)
     .function("getCommitScore", &GitGud::Commit::getCommitScore)
-    .function("getSuggestionsMessages", &GitGud::Commit::getSuggestionsMessages)
-    .function("getSuggestionsLines", &GitGud::Commit::getSuggestionsLines)
+    .function("getSuggestions", &GitGud::Commit::getSuggestionsFull)
     ;
 }
 

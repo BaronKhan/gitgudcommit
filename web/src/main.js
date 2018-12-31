@@ -7,7 +7,6 @@ var commits = [];
 // Each index corresponds to the commit element above
 var scores = [];
 var suggestions = [];
-var line_numbers = [];
 
 var getCommits = false;
 var analysisInProgress = false;
@@ -30,14 +29,10 @@ coreworker.addEventListener('message', function(e) {
     case "suggestions":
       suggestions.push(data.data);
       break;
-    case "line_numbers":
-      line_numbers.push(data.data);
-      break;
   }
   analysisProgress = 50 + Math.ceil(((scores.length)*50.0)/commits.length);
   setProgressBar();
-  if (commits.length == scores.length && commits.length == suggestions.length
-        && commits.length == line_numbers.length) {
+  if (commits.length == scores.length && commits.length == suggestions.length) {
     console.log("All commits have been analysed");
     analysisInProgress = false;
   }
@@ -111,7 +106,6 @@ function initCommitAnalysis() {
   commits = [];
   scores = [];
   suggestions = [];
-  line_numbers = [];
   getCommits = true;
   cloneProgress = 0;
   analysisProgress = 0;
@@ -195,7 +189,6 @@ function startWalk() {
   analysedCommits = [];
   scores = [];
   suggestions = [];
-  line_numbers = [];
   finishedWalk = false;
 }
 

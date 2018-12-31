@@ -15,8 +15,7 @@ namespace GitGud
   private:
     std::vector<MessageNode*> m_nodes;
     std::vector<std::pair<unsigned, std::string>> m_suggestions;
-    std::vector<std::string> m_suggestions_messages;
-    std::vector<unsigned> m_suggestions_lines;
+    std::vector<std::string> m_suggestions_full;
     double m_score;
 
     void parseMessage(const std::string &message);
@@ -29,8 +28,7 @@ namespace GitGud
 
     std::vector<MessageNode*> & getNodes();
     std::vector<std::pair<unsigned, std::string>> & getSuggestions();
-    std::vector<std::string> getSuggestionsMessages();
-    std::vector<unsigned> getSuggestionsLines();
+    std::vector<std::string> getSuggestionsFull();
     double getCommitScore();
     void addSuggestion(unsigned line_number, const std::string & suggestion);
 
