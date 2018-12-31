@@ -1,4 +1,5 @@
 const gitworker = new Worker("git_worker.js");
+const coreworker = new Worker("core_worker.js");
 
 var currentCommit = {};
 var commits = [];

@@ -6,3 +6,7 @@ libgit2.wasm
 
 core/lib
 core/models
+
+gitgudcore.js
+gitgudcore.wasm
+gitgudcore.data
