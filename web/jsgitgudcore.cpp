@@ -2,6 +2,7 @@
 #include <emscripten.h>
 #include <emscripten/bind.h>
 #include <string>
+#include <utility>
 
 #include "tagger.hpp"
 #include "gitgudcommit.hpp"
@@ -19,7 +20,7 @@ void jsInitPosTagger()
 EMSCRIPTEN_BINDINGS(my_module) {
   function("jsInitPosTagger", &jsInitPosTagger);
   register_vector<std::string>("vector<string>");
-  register_vector<std::pair<unsigned, std::string>>("vector<pair<unsigned, string>>");
+  register_vector<unsigned>("vector<unsigned>");
 
   class_<GitGud::Commit>("Commit")
     .constructor< const std::string &, const std::string &,
@@ -29,7 +30,8 @@ EMSCRIPTEN_BINDINGS(my_module) {
     .property("message", &GitGud::Commit::getMessage)
     .property("timestamp", &GitGud::Commit::getTimestamp)
     .function("getCommitScore", &GitGud::Commit::getCommitScore)
-    .function("getSuggestions", &GitGud::Commit::getSuggestions)
+    .function("getSuggestionsMessages", &GitGud::Commit::getSuggestionsMessages)
+    .function("getSuggestionsLines", &GitGud::Commit::getSuggestionsLines)
     ;
 }
 

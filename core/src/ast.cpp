@@ -45,6 +45,11 @@ namespace GitGud
       score += node->getScore();
     }
     m_score = std::min(std::max(0.0, score/m_nodes.size()), 5.0);
+
+    std::transform(m_suggestions.begin(), m_suggestions.end(), std::back_inserter(m_suggestions_lines),
+      (const unsigned& (*)(const std::pair<unsigned, std::string>&))std::get<0>);
+    std::transform(m_suggestions.begin(), m_suggestions.end(), std::back_inserter(m_suggestions_messages),
+      (const std::string& (*)(const std::pair<unsigned, std::string>&))std::get<1>);
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -60,6 +65,20 @@ namespace GitGud
   std::vector<std::pair<unsigned, std::string>> & Ast::getSuggestions()
   {
     return m_suggestions;
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  std::vector<std::string> Ast::getSuggestionsMessages()
+  {
+    return m_suggestions_messages;
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  std::vector<unsigned> Ast::getSuggestionsLines()
+  {
+    return m_suggestions_lines;
   }
 
   //////////////////////////////////////////////////////////////////////////////

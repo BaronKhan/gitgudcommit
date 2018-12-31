@@ -57,10 +57,25 @@ namespace GitGud
     return m_ast->getCommitScore();
   }
 
+  //////////////////////////////////////////////////////////////////////////////
 
   std::vector<std::pair<unsigned, std::string>> & Commit::getSuggestions()
   {
     return m_ast->getSuggestions();
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  std::vector<std::string> Commit::getSuggestionsMessages()
+  {
+    return m_ast->getSuggestionsMessages();
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  std::vector<unsigned> Commit::getSuggestionsLines()
+  {
+    return m_ast->getSuggestionsLines();
   }
 
 }

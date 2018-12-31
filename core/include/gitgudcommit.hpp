@@ -31,6 +31,8 @@ namespace GitGud
 
     double getCommitScore() const;
     std::vector<std::pair<unsigned, std::string>> & getSuggestions();
+    std::vector<std::string> getSuggestionsMessages();
+    std::vector<unsigned> getSuggestionsLines();
   };
 
 }
