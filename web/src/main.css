@@ -10,3 +10,13 @@ html,body { height:90%; }
   height: 80%;
   width: 100%;
 }
+
+.col-centered{
+  float: none;
+  margin: 0 auto;
+}
+
+td {
+  word-wrap: break-word;
+  max-width: 400px;
+}

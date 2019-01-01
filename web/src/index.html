@@ -11,8 +11,8 @@
   <body>
     <h1 class="text-center">Git Gud Commit</h1>
     <center>
-      <p>Enter a GitHub repository URL to analyse it!</p>
-      <small>You can also upload a zipped archive of a repository</small>
+      <p>Enter a GitHub repository URL to analyse its quality!</p>
+      <small>You can also upload a zipped archive of a repository.</small>
     </center>
     <div id="panelRepo" class="panel panel-default">
       <div class="form-inline text-center">
@@ -143,44 +143,46 @@
           <canvas id="scoreChart" height="85%"></canvas>
         </div>
         <div id="faq" class="tab-pane fade">
-          <h3>FAQ</h3>
-          <br>
-          <h4>What is this?</h4>
-          <p>This website is part of "gitgudcommit" - a suite of tools for improving
-          the quality of Git repositories. Using this website, you
-          will be able to determine the quality of commit messages in a public
-          Git repository.</p>
-          <br>
-          <h4>How do you know if a commit message is 'good'?</h4>
-          <p>Linus Torvalds, the creator of Linux kernel and Git, has outline
-            what makes a good commit message <a target="_blank"
-            href="https://github.com/torvalds/subsurface-for-dirk/blob/a48494d2fbed58c751e9b7e8fbff88582f9b2d02/README#L88">
-          here</a>.
-            Several developers have generalised these guidelines and created a
-            set of 'rules' for commit messages.
-            Using natural language processing techniques, commit messages are
-            analysed to determine whether they abide to these rules, and a score
-            is assigned to the commit using a simple algorithm.</p>
-          <br>
-          <h4>Who cares?</h4>
-          <p>Writing good commit messages is not good practice, it can be considered
-          essential for large-scale projects. If a user is searching for a commit
-          which something critical, the message, "Yay, it work! (i think)" is
-          not going to help them determine which commit could have broken the project.</p>
-          <p>While commands such as "git blame" may make this easier,
-          it doesn't help when you need to search through the log history to find
-          the cause of an issue.</p>
-          <br>
-          <h4>Is this website stealing my data?</h4>
-          <p>This website works completely offline and no repository data is sent
-          to any server.</p>
-          <p>For the analysis of a public repository via a GitHub URL, the web server which serves this
-            website is running a proxy for GitHub.com, and the headers of any
-            GET/POST requests to GitHub.com are slightly altered in order to bypass
-            the CORS policy. The web server does not handle any repository data directly.
-            Private and Enterprise repositories cannot be read via a URL, but
-            can be read via an uploaded ZIP. The ZIP file and its contents are
-            never uploaded to any server, and any analysis is performed locally.</p>
+          <div class="col-md-7 col-centered">
+            <h3 class="text-center">FAQ</h3>
+            <h4>What is this?</h4>
+            <p>This website is part of "gitgudcommit" - a suite of tools for improving
+            the quality of Git repositories. Using this website, you
+            will be able to determine the quality of commit messages in a public
+            Git repository.</p>
+            <h4>How do you know if a commit message is 'good'?</h4>
+            <p>Linus Torvalds, the creator of Linux kernel and Git, has outlined
+              what makes a good commit message <a target="_blank"
+              href="https://github.com/torvalds/subsurface-for-dirk/blob/a48494d2fbed58c751e9b7e8fbff88582f9b2d02/README#L88">
+            here</a>.
+              Several developers have generalised these guidelines and created a
+              set of 'rules' for commit messages.
+              Using natural language processing techniques, commit messages are
+              analysed to determine whether they abide to these rules, and a score
+              is assigned to the commit using a simple algorithm.</p>
+            <h4>Who cares?</h4>
+            <p>Writing good commit messages is not good practice, it can be considered
+            essential for large-scale projects. If a user is searching for a commit
+            which something critical, the message, "Yay, it work! (i think)" is
+            not going to help them determine which commit could have broken the project.</p>
+            <p>While commands such as "git blame" may make this easier,
+            it doesn't help when you need to search through the log history to find
+            the cause of an issue.</p>
+            <h4>Is this website stealing my data?</h4>
+            <p>This website works completely offline and no repository data is sent
+            to any server.</p>
+            <p>For the analysis of a public repository via a GitHub URL, the web server which serves this
+              website is running a proxy for GitHub.com, and the headers of any
+              GET/POST requests to GitHub.com are slightly altered in order to bypass
+              the CORS policy. The web server does not handle any repository data directly.
+              Private and Enterprise repositories cannot be read via a URL, but
+              can be read via an uploaded ZIP. The ZIP file and its contents are
+              never uploaded to any server, and any analysis is performed locally.</p>
+            <h4>I have more questions</h4>
+            <p>Check out the GitHub repository of this project <a target="_blank"
+              href="https://github.com/BaronKhan/gitgudcommit">here</a>.
+            Feel free to analyse the repostitory with this tool if you want :)</p>
+          </div>
         </div>
       </div>
     </div>

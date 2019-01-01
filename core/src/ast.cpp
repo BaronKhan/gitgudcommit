@@ -33,6 +33,20 @@ namespace GitGud
     std::vector<std::string> lines = Ast::split(message, '\n');
     MessageNode* title_node = new SummaryNode(this, lines[0]);
     m_nodes.push_back(title_node);
+    if (lines.size() > 1) {
+      for (unsigned i=2; i<lines.size(); i++)
+      {
+        MessageNode *new_node;
+        auto line = lines[i];
+        if (line.compare("") == 0)
+          new_node = new BlankNode(this, i);
+        else if (std::find(line.begin(), line.end(), '-') != line.end()) //TODO: ignore hyphens in words
+          new_node = new PointNode(this, i, line);
+        else
+          new_node = new BodyNode(this, i, line);
+        m_nodes.push_back(new_node);
+      }
+    }
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -46,7 +60,10 @@ namespace GitGud
     }
     m_score = std::min(std::max(0.0, score/m_nodes.size()), 5.0);
 
-    for (int i=0; i<m_suggestions.size(); i++)
+    // TODO: adjust score based on ratio of lines changed to message lines
+    // TODO: check if 2nd line is a blank line
+
+    for (unsigned i=0; i<m_suggestions.size(); i++)
     {
       auto suggestion = m_suggestions[i];
       std::stringstream ss;
@@ -141,10 +158,10 @@ namespace GitGud
 
     double score = 5.0;
 
-    if (m_summary.length() > 72)
+    if (m_summary.length() > 50)
     {
-      addSuggestion(1, "Length of summary is greater than 72 character.");
-      score -= 2.0;
+      addSuggestion(1, "Length of summary is greater than 50 characters.");
+      score -= 1.9 + (0.1 * (m_summary.length() - 50));
     }
 
     if (!isupper(m_summary[0]))  // TODO: OR if begins with a file name
@@ -164,6 +181,115 @@ namespace GitGud
         std::stringstream ss;
         ss << "\"" << words[i] << "\" - consider using the present tense form.";
         addSuggestion(1, ss.str());
+        score -= 1.0/tags_size;
+      }
+    }
+
+    return std::max(0.0, score);
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  BlankNode::BlankNode(Ast *owner, unsigned line_number)
+  : MessageNode(owner), m_line_number(line_number), m_blank("")
+  {
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  const std::string & BlankNode::getData()
+  {
+    return m_blank;
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  double BlankNode::getScore() const
+  {
+    return 5.0;
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  BodyNode::BodyNode(Ast *owner, unsigned line_number, const std::string &line)
+  : MessageNode(owner), m_line_number(line_number), m_line(line)
+  {
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  const std::string & BodyNode::getData()
+  {
+    return m_line;
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  double BodyNode::getScore() const
+  {
+    double score = 5.0;
+
+    if (m_line.length() > 72)
+    {
+      addSuggestion(m_line_number, "Length of line is greater than 72 characters.");
+      score -= 0.1 * (m_line.length() - 72);
+    }
+
+    auto words = Tagger::getInstance().sentence2Vec(m_line);
+    auto tags = Tagger::getInstance().tagSentence(words);
+    auto tags_size = tags.size();
+    for (unsigned i=0; i<tags_size; ++i)
+    {
+      auto tag = tags[i];
+      if (tag.find("VBN") != std::string::npos || tag.find("VBD") != std::string::npos)
+      {
+        std::stringstream ss;
+        ss << "\"" << words[i] << "\" - consider using the present tense form.";
+        addSuggestion(m_line_number, ss.str());
+        score -= 1.0/tags_size;
+      }
+    }
+
+    return std::max(0.0, score);
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  PointNode::PointNode(Ast *owner, unsigned line_number, const std::string &point)
+  : MessageNode(owner), m_line_number(line_number), m_point(point)
+  {
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  const std::string & PointNode::getData()
+  {
+    return m_point;
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  double PointNode::getScore() const
+  {
+    double score = 5.0;
+
+    if (m_point.length() > 72)
+    {
+      addSuggestion(m_line_number, "Length of bullet point is greater than 72 characters.");
+      score -= 1.0;
+    }
+
+    auto words = Tagger::getInstance().sentence2Vec(m_point);
+    auto tags = Tagger::getInstance().tagSentence(words);
+    auto tags_size = tags.size();
+    for (unsigned i=0; i<tags_size; ++i)
+    {
+      auto tag = tags[i];
+      if (tag.find("VBN") != std::string::npos || tag.find("VBD") != std::string::npos)
+      {
+        std::stringstream ss;
+        ss << "\"" << words[i] << "\" - consider using the present tense form.";
+        addSuggestion(m_line_number, ss.str());
         score -= 1.0/tags_size;
       }
     }

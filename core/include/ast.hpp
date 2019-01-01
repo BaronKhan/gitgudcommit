@@ -35,6 +35,8 @@ namespace GitGud
     ~Ast();
   };
 
+  //////////////////////////////////////////////////////////////////////////////
+
   class MessageNode
   {
   private:
@@ -51,6 +53,8 @@ namespace GitGud
     virtual ~MessageNode() {}
   };
 
+  //////////////////////////////////////////////////////////////////////////////
+
   class SummaryNode : public MessageNode
   {
   private:
@@ -58,6 +62,50 @@ namespace GitGud
 
   public:
     SummaryNode(Ast *owner, const std::string &title);
+
+    virtual const std::string & getData();
+    virtual double getScore() const;
+  };
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  class BlankNode : public MessageNode
+  {
+  private:
+    unsigned m_line_number;
+    std::string m_blank;
+  public:
+    BlankNode(Ast *owner, unsigned line_number);
+
+    virtual const std::string & getData();
+    virtual double getScore() const;
+  };
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  class BodyNode : public MessageNode
+  {
+  private:
+    unsigned m_line_number;
+    std::string m_line;
+
+  public:
+    BodyNode(Ast *owner, unsigned line_number, const std::string &line);
+
+    virtual const std::string & getData();
+    virtual double getScore() const;
+  };
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  class PointNode : public MessageNode
+  {
+  private:
+    unsigned m_line_number;
+    std::string m_point;
+
+  public:
+    PointNode(Ast *owner, unsigned line_number, const std::string &point);
 
     virtual const std::string & getData();
     virtual double getScore() const;
