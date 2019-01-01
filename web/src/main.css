@@ -1,4 +1,12 @@
+html,body { height:90%; }
+
 #cloneProgress {
   width: 100%;
   background-color: #ddd;
+}
+
+.tab-pane{
+  overflow-y:scroll;
+  height: 85%;
+  width: 100%;
 }

@@ -290,21 +290,43 @@ function removeFailureAlert() {
 function populatePanel() {
   $("#commitCount").html(commits.length+" Commits Found");
 
+  if ($(window).width() >= 1000) {
+    $("#tableHeadData").html("\
+      <tr> \
+        <th>Author</th> \
+        <th>Date</th> \
+        <th>Message</th> \
+        <th>Rating</th> \
+        <th>Suggestions</th> \
+      </tr>");
+  } else {
+    $("#tableHeadData").html("\
+      <tr> \
+        <th>Message</th> \
+        <th>Rating</th> \
+        <th>Suggestions</th> \
+      </tr>");
+  }
+
   var tableData = "";
   for (var i=0; i < commits.length; i++) {
     var commit = commits[i];
     var score = scores[i];
     var suggestion = suggestions[i];
     tableData += "<tr>";
-    tableData += "<td>"+commit.author+"</td>";
-    var d = new Date(parseInt(commit.time*1000));
-    function twoD(value) {
-      return ("0" + value).slice(-2);
+    if ($(window).width() >= 1000) {
+      tableData += "<td>"+commit.author+"</td>";
+      var d = new Date(parseInt(commit.time*1000));
+      function twoD(value) {
+        return ("0" + value).slice(-2);
+      }
+      tableData += "<td>"+twoD(d.getUTCDate())+"/"+twoD(d.getUTCMonth()+1)+"/"+
+                      d.getUTCFullYear()+" "+twoD(d.getUTCHours())+":"+
+                      twoD(d.getUTCMinutes())+"</td>";
+      tableData += "<td><pre>"+commit.message.replaceAll("\r\n", "<br>").replaceAll("\n", "<br>")+"</pre></td>";
+    } else {
+      tableData += "<td style=\"font-size:11px\">"+commit.message.replaceAll("\r\n", "<br>").replaceAll("\n", "<br>")+"</td>";
     }
-    tableData += "<td>"+twoD(d.getUTCDate())+"/"+twoD(d.getUTCMonth()+1)+"/"+
-                    d.getUTCFullYear()+" "+twoD(d.getUTCHours())+":"+
-                    twoD(d.getUTCMinutes())+"</td>";
-    tableData += "<td><pre>"+commit.message.replaceAll("\r\n", "<br>").replaceAll("\n", "<br>")+"</pre></td>";
     tableData += "<td>"+Math.round(score * 100) / 100+" / 5</td>";
     tableData += "<td><ul>";
     for (var j=0; j<suggestion.length; j++) {
@@ -318,6 +340,7 @@ function populatePanel() {
 
 $(window).resize(function() {
   resizeUrlBox();
+  populatePanel();
 });
 
 function resizeUrlBox() {
