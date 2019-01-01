@@ -8,6 +8,7 @@ var commits = [];
 var scores = [];
 var suggestions = [];
 var averageScore = 0;
+var cummulativeAverage = [];
 
 var getCommits = false;
 var analysisInProgress = false;
@@ -34,13 +35,15 @@ coreworker.addEventListener('message', function(e) {
   var scores_length = scores.length;
   analysisProgress = 50 + Math.ceil(((scores_length)*50.0)/commits.length);
   setProgressBar();
+  // Calculate current average and cummulative average
+  var sum = 0.0;
+  for (var i = 0; i < scores_length; i++) {
+      sum += parseInt( scores[i], 10 );
+  }
+  averageScore = sum/scores_length;
+  cummulativeAverage.push(averageScore);
   if (commits.length == scores_length && commits.length == suggestions.length) {
     console.log("All commits have been analysed");
-    var sum = 0.0;
-    for (var i = 0; i < scores_length; i++) {
-        sum += parseInt( scores[i], 10 );
-    }
-    averageScore = sum/scores_length;
     populatePanel();
     analysisInProgress = false;
   }
@@ -77,6 +80,7 @@ gitworker.addEventListener('message', function(e) {
           'repo_name': repoName
         })
       }
+      return;
     } else if (e.data.hasOwnProperty("___ERROR___")) {
       removeFailureAlert();
       removeSuccessAlert();
@@ -114,6 +118,7 @@ function initCommitAnalysis() {
   commits = [];
   scores = [];
   suggestions = [];
+  cummulativeAverage = [];
   getCommits = true;
   cloneProgress = 0;
   analysisProgress = 0;
@@ -197,6 +202,7 @@ function startWalk() {
   analysedCommits = [];
   scores = [];
   suggestions = [];
+  cummulativeAverage = [];
   finishedWalk = false;
 }
 
@@ -282,7 +288,32 @@ function removeFailureAlert() {
 }
 
 function populatePanel() {
+  $("#commitCount").html(commits.length+" Commits Found");
 
+  var tableData = "";
+  for (var i=0; i < commits.length; i++) {
+    var commit = commits[i];
+    var score = scores[i];
+    var suggestion = suggestions[i];
+    tableData += "<tr>";
+    tableData += "<td>"+commit.author+"</td>";
+    var d = new Date(parseInt(commit.time*1000));
+    function twoD(value) {
+      return ("0" + value).slice(-2);
+    }
+    tableData += "<td>"+twoD(d.getUTCDate())+"/"+twoD(d.getUTCMonth()+1)+"/"+
+                    d.getUTCFullYear()+" "+twoD(d.getUTCHours())+":"+
+                    twoD(d.getUTCMinutes())+"</td>";
+    tableData += "<td><pre>"+commit.message.replaceAll("\r\n", "<br>").replaceAll("\n", "<br>")+"</pre></td>";
+    tableData += "<td>"+Math.round(score * 100) / 100+" / 5</td>";
+    tableData += "<td><ul>";
+    for (var j=0; j<suggestion.length; j++) {
+      tableData += "<li>"+suggestion[j]+"</li>";
+    }
+    tableData += "</ul></td>";
+    tableData += "</tr>\n";
+  }
+  $("#tableBodyData").html(tableData);
 }
 
 $(window).resize(function() {
@@ -303,8 +334,13 @@ function resizeUrlBox() {
 $(document).ready(function () {
   $("#commitSearchInput").on("keyup", function () {
     var value = $(this).val().toLowerCase();
-    $("#commitTable tr").filter(function () {
+    $("#tableBodyData tr").filter(function () {
       $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
     });
   });
 });
+
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};

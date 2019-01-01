@@ -36,18 +36,20 @@ self.addEventListener('message', function(e) {
         if (commit != "___NULL___" && !commit.includes("Merge pull request")) {
           try {
             jsonObj = JSON.parse(commit
-              .replace('&', 'amp;')
-              .replace('\n', 'endl;')
-              .replace('<', 'lt;')
-              .replace('>', 'gt;')
-              .replace('#', 'hash;')
+              .replaceAll('&', '&amp;')
+              .replaceAll('\n', '&endl;')
+              .replaceAll('\r', '&cr;')
+              .replaceAll('<', '&lt;')
+              .replaceAll('>', '&gt;')
+              .replaceAll('#', '&hash;')
             );
             jsonObj.message = jsonObj.message
-              .replace('endl;', '\n')
-              .replace('lt;', '<')
-              .replace('gt;', '>')
-              .replace('hash;', '#')
-              .replace('amp;', '&');
+              .replaceAll('&endl;', '\n')
+              .replaceAll('&cr;', '\n')
+              .replaceAll('&lt;', '<')
+              .replaceAll('&gt;', '>')
+              .replaceAll('&hash;', '#')
+              .replaceAll('&amp;', '&');
             self.postMessage(jsonObj);
           } catch (e) {
             console.log("Error while parsing this commit:\n"+commit+"\n\n"+e.message);
@@ -108,3 +110,8 @@ function baseName(str) {
   var base = new String(str).substring(str.lastIndexOf('/') + 1);
   return base;
 }
+
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};
