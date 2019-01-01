@@ -20,6 +20,8 @@ var analysisProgress = 0;
 var fileCount = 0;
 var repoName = "";
 
+var reloading = false;
+
 resizeUrlBox();
 
 coreworker.addEventListener('message', function(e) {
@@ -87,6 +89,13 @@ gitworker.addEventListener('message', function(e) {
       createFailureAlert(e.data.___ERROR___);
       analysisInProgress = false;
       hideProgressBar();
+    } else if (e.data.hasOwnProperty("___TOOBIG___")) {
+      if (!reloading) {
+        reloading = true;
+        var estimated_size = Math.round(e.data.___TOOBIG___/31);
+        alert("The repository is too big (~"+estimated_size+"MB). The maximum size is 150MB Please use the 'Upload ZIP' feature.");
+      }
+      window.location.reload();
     }
   } else if (e.data == "___NULL___") {
     if (analysisInProgress) {
