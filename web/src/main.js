@@ -7,6 +7,7 @@ var commits = [];
 // Each index corresponds to the commit element above
 var scores = [];
 var suggestions = [];
+var averageScore = 0;
 
 var getCommits = false;
 var analysisInProgress = false;
@@ -30,10 +31,17 @@ coreworker.addEventListener('message', function(e) {
       suggestions.push(data.data);
       break;
   }
-  analysisProgress = 50 + Math.ceil(((scores.length)*50.0)/commits.length);
+  var scores_length = scores.length;
+  analysisProgress = 50 + Math.ceil(((scores_length)*50.0)/commits.length);
   setProgressBar();
-  if (commits.length == scores.length && commits.length == suggestions.length) {
+  if (commits.length == scores_length && commits.length == suggestions.length) {
     console.log("All commits have been analysed");
+    var sum = 0.0;
+    for (var i = 0; i < scores_length; i++) {
+        sum += parseInt( scores[i], 10 );
+    }
+    averageScore = sum/scores_length;
+    populatePanel();
     analysisInProgress = false;
   }
 }, false);
@@ -202,19 +210,22 @@ function endWalk() {
 
 function setProgressBar() {
   var elem = document.getElementById("cloneProgressBar");
-  var value = Math.ceil((cloneProgress * 0.8) + (analysisProgress * 0.2)) + '%';
+  var value = Math.ceil((cloneProgress * 0.75) + (analysisProgress * 0.25)) + '%';
   elem.style.width = value;
   elem.innerHTML = value;
 
   var block = document.getElementById("cloneProgress");
   var loading = document.getElementById("loadingImg");
-  if (analysisInProgress)
-    block.style.display = "";
-    loading.style.display = "";
+  if (analysisInProgress) {
+    $("#cloneProgress").fadeIn();
+    $("#loadingImg").fadeIn();
+    document.getElementById("panelAnalysis").style.display = "none";
+  }
   if (value == "100%") {
     setTimeout(function(){
       block.style.display = "none";
       loading.style.display = "none";
+      $("#panelAnalysis").fadeIn();
       createSuccessAlert("The Git repository has been analysed.");
     }, 1000);
   }
@@ -270,6 +281,10 @@ function removeFailureAlert() {
   }
 }
 
+function populatePanel() {
+
+}
+
 $(window).resize(function() {
   resizeUrlBox();
 });
@@ -278,7 +293,18 @@ function resizeUrlBox() {
   var urlInput = document.getElementById("urlInput");
   if ($(window).width() < 770) {
     urlInput.style.width=(document.body.offsetWidth-2)+"px"; //I have no idea if this is valid but it seems to work.
+    urlInput.className="form-control text-center";
   } else {
     urlInput.style.width="358px";
+    urlInput.className="form-control";
   }
 }
+
+$(document).ready(function () {
+  $("#commitSearchInput").on("keyup", function () {
+    var value = $(this).val().toLowerCase();
+    $("#commitTable tr").filter(function () {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
