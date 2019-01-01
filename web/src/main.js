@@ -396,3 +396,9 @@ function epochToString(epoch) {
     d.getUTCFullYear()+" "+twoDigits(d.getUTCHours())+":"+
     twoDigits(d.getUTCMinutes());
 }
+
+setInterval(function() {
+  if (!analysisInProgress) {
+    hideProgressBar();
+  }
+}, 5000);
