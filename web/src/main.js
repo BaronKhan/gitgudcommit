@@ -8,6 +8,8 @@ var commits = [];
 var scores = [];
 var suggestions = [];
 var averageScore = 0;
+var timestamps = [];
+var timestamps_copy = [];
 var cummulativeAverage = [];
 
 var getCommits = false;
@@ -38,16 +40,19 @@ coreworker.addEventListener('message', function(e) {
   analysisProgress = 50 + Math.ceil(((scores_length)*50.0)/commits.length);
   setProgressBar();
   // Calculate current average and cummulative average
-  var sum = 0.0;
-  for (var i = 0; i < scores_length; i++) {
-      sum += parseInt( scores[i], 10 );
-  }
-  averageScore = sum/scores_length;
-  cummulativeAverage.push(averageScore);
   if (commits.length == scores_length && commits.length == suggestions.length) {
     console.log("All commits have been analysed");
     populatePanel();
     analysisInProgress = false;
+
+    var sum = 0.0;
+    var j = 0;
+    for (var i = scores_length-1; i >= 0; i-=Math.floor(scores_length/100)+1) {
+      sum += parseInt( scores[i], 10 );
+      j++;
+      averageScore = Math.round((sum/j) * 100) / 100;
+      cummulativeAverage.push(averageScore);
+    }
   }
 }, false);
 
@@ -93,7 +98,8 @@ gitworker.addEventListener('message', function(e) {
       if (!reloading) {
         reloading = true;
         var estimated_size = Math.round(e.data.___TOOBIG___/31);
-        alert("The repository is too big (~"+estimated_size+"MB). The maximum size is 150MB Please use the 'Upload ZIP' feature.");
+        alert("The repository is too big (~"+estimated_size+
+          "MB). The maximum size is 150MB Please use the 'Upload ZIP' feature.");
       }
       window.location.reload();
     }
@@ -127,6 +133,7 @@ function initCommitAnalysis() {
   commits = [];
   scores = [];
   suggestions = [];
+  timestamps = [];
   cummulativeAverage = [];
   getCommits = true;
   cloneProgress = 0;
@@ -177,8 +184,14 @@ function analyseCommits() {
   analysisProgress = 50;
   for (i=0; i<numCommits; i++) {
     var commit = commits[i];
+    timestamps.push(epochToString(parseInt(commit.time)*1000));
     coreworker.postMessage({ 'cmd': 'analyse', 'commit': commit })
   }
+  timestamps_copy = [];
+  for (var i=0; i<timestamps.length; i+=Math.floor(timestamps.length/100)+1) {
+    timestamps_copy.push(timestamps[i]);
+  }
+  timestamps_copy.reverse();
   console.log("Commits sent to core worker");
 }
 
@@ -211,6 +224,7 @@ function startWalk() {
   analysedCommits = [];
   scores = [];
   suggestions = [];
+  timestamps = [];
   cummulativeAverage = [];
   finishedWalk = false;
 }
@@ -325,16 +339,12 @@ function populatePanel() {
     tableData += "<tr>";
     if ($(window).width() >= 1000) {
       tableData += "<td>"+commit.author+"</td>";
-      var d = new Date(parseInt(commit.time*1000));
-      function twoD(value) {
-        return ("0" + value).slice(-2);
-      }
-      tableData += "<td>"+twoD(d.getUTCDate())+"/"+twoD(d.getUTCMonth()+1)+"/"+
-                      d.getUTCFullYear()+" "+twoD(d.getUTCHours())+":"+
-                      twoD(d.getUTCMinutes())+"</td>";
-      tableData += "<td><pre>"+commit.message.replaceAll("\r\n", "<br>").replaceAll("\n", "<br>")+"</pre></td>";
+      tableData += "<td>"+epochToString(parseInt(commit.time)*1000)+"</td>";
+      tableData += "<td><pre>"+commit.message.replaceAll("\r\n", "<br>")
+                        .replaceAll("\n", "<br>")+"</pre></td>";
     } else {
-      tableData += "<td style=\"font-size:11px\">"+commit.message.replaceAll("\r\n", "<br>").replaceAll("\n", "<br>")+"</td>";
+      tableData += "<td style=\"font-size:11px\">"+commit.message
+                      .replaceAll("\r\n", "<br>").replaceAll("\n", "<br>")+"</td>";
     }
     tableData += "<td>"+Math.round(score * 100) / 100+" / 5</td>";
     tableData += "<td><ul>";
@@ -345,11 +355,13 @@ function populatePanel() {
     tableData += "</tr>\n";
   }
   $("#tableBodyData").html(tableData);
+  updateScoreChart();
 }
 
 $(window).resize(function() {
   resizeUrlBox();
   populatePanel();
+  updateScoreChart();
 });
 
 function resizeUrlBox() {
@@ -376,3 +388,11 @@ String.prototype.replaceAll = function(search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, 'g'), replacement);
 };
+
+function epochToString(epoch) {
+  var d = new Date(epoch);
+  function twoDigits(value) { return ("0" + value).slice(-2); }
+  return twoDigits(d.getUTCDate())+"/"+twoDigits(d.getUTCMonth()+1)+"/"+
+    d.getUTCFullYear()+" "+twoDigits(d.getUTCHours())+":"+
+    twoDigits(d.getUTCMinutes());
+}

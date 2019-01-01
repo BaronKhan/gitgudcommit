@@ -18,10 +18,12 @@ const mimeTypes = {
 };
 
 // Maximum 10 requests every minute; else activate circuit breaker
-const requestLimit = 10*20;
+const requestLimit = 10*25;
 const requestBreakTime = 60*1000;
 
 var requestCount = 0;
+
+var cloneRequests = 0;
 
 function onRequest(request, response) {
   let path = request.url.substring(1);
@@ -50,6 +52,11 @@ function onRequest(request, response) {
       request.pipe(proxy, {
         end: true
       });
+
+      cloneRequests+=0.5;
+      if (cloneRequests == Math.round(cloneRequests)) {
+        console.log("Total clone requests = "+cloneRequests);
+      }
 
     } else {
       if(path === '') {
