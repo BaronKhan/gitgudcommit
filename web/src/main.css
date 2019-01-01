@@ -7,6 +7,6 @@ html,body { height:90%; }
 
 .tab-pane{
   overflow-y:scroll;
-  height: 85%;
+  height: 80%;
   width: 100%;
 }
