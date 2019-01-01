@@ -9,17 +9,17 @@
     <link rel="stylesheet" href="file_upload.css">
   </head>
   <body>
-    <h1 class="text-center">gitgudcommit</h1>
+    <h1 class="text-center">GIT GUD COMMIT</h1>
 
     <div id="panelRepo" class="panel panel-default">
       <div class="form-inline text-center">
+        <input type="text" class="form-control" onClick="this.select();"
+            placeholder="Enter GitHub Repository URL (https://github.com/...)" style="width: 358px;"
+            value="" id="urlInput">
         <div class="fileUpload btn btn-default">
           <span>Upload ZIP</span>
           <input type="file" class="upload" id="uploadZip"/>
         </div>
-        <input type="text" class="form-control text-center" onClick="this.select();"
-            placeholder="Enter GitHub Repository URL (https://github.com/...)" style="width: 358px;"
-            value="" id="urlInput">
         <button class="btn btn-primary" onclick="analyseUrl()">Git Gud</button>
       </div>
 
@@ -33,6 +33,117 @@
         <img id="loadingImg" src="loading.gif" alt="Analysing..." style="display:none">
       </center>
 
+    </div>
+
+    <div id="panelAnalysis" class="panel panel-default" style="display:none">
+      <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#summary">Summary</a></li>
+        <li><a data-toggle="tab" href="#commits">Commits</a></li>
+        <li><a data-toggle="tab" href="#graphs">Graphs</a></li>
+        <li><a data-toggle="tab" href="#faq">FAQ</a></li>
+      </ul>
+
+      <div class="tab-content">
+        <div id="summary" class="tab-pane fade in active text-center">
+          <h3>SUMMARY</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        </div>
+        <div id="commits" class="tab-pane fade">
+          <h3 class="text-center">COMMITS</h3>
+          <div class="container search-table">
+            <div class="search-box">
+              <div class="row">
+                <div class="col-md-3">
+                  <h5>Search for Commits:</h5>
+                </div>
+                <div class="col-md-9">
+                  <input type="text" id="commitSearchInput" class="form-control" placeholder="Search all commits">
+                </div> 
+              </div>
+            </div>
+            <div class="search-list">
+              <h3>303 Commits Found</h3>
+              <table class="table" id="commitTable">
+                <thead>
+                  <tr>
+                    <th>Author</th>
+                    <th>Date</th>
+                    <th>Message</th>
+                    <th>Rating</th>
+                    <th>Suggestions</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                <tr>
+                  <td>HTML</td>
+                  <td>01/01/19 00:00</td>
+                  <td>Web Develpment</td>
+                  <td>5 stars</td>
+                  <td>
+                    <ul>
+                      <li>This commit is longer than 72 characters.</li>
+                      <li>"Web" - consider using the present tense form.</li>
+                      <li>"Develpment" - possible spelling error.</li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <td>PHP</td>
+                  <td>01/01/19 00:00</td>
+                  <td>Web Development</td>
+                  <td>5 stars</td>
+                </tr>
+                <tr>
+                  <td>C#</td>
+                  <td>01/01/19 00:00</td>
+                  <td>Programming Language</td>
+                  <td>5 stars</td>
+                </tr>
+                <tr>
+                  <td>JavaScript</td>
+                  <td>01/01/19 00:00</td>
+                  <td>Web Development</td>
+                  <td>5 stars</td>
+                </tr>
+                <tr>
+                  <td>Bootstrap</td>
+                  <td>01/01/19 00:00</td>
+                  <td>Web Design</td>
+                  <td>5 stars</td>
+                </tr>
+                <tr>
+                  <td>Python</td>
+                  <td>01/01/19 00:00</td>
+                  <td>Programming Language</td>
+                  <td>5 stars</td>
+                </tr>
+                <tr>
+                  <td>Android</td>
+                  <td>01/01/19 00:00</td>
+                  <td>App Development</td>
+                  <td>5 stars</td>
+                </tr>
+                <tr>
+                  <td>Angular JS</td>
+                  <td>01/01/19 00:00</td>
+                  <td>Web Delopment</td>
+                  <td>5 stars</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div id="graphs" class="tab-pane fade">
+          <h3>Graphs</h3>
+          <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+        </div>
+        <div id="faq" class="tab-pane fade">
+          <h3>FAQ</h3>
+          <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+        </div>
+      </div>
     </div>
 
   </body>
