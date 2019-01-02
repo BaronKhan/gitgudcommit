@@ -18,8 +18,15 @@ int main(int argc, char **argv)
 
 TEST(SplitMessage, Lines)
 {
-  const std::string test = "A title\n\n Should be 5 lines.\n\n- A bullet point";
+  const std::string test = "A title\n\nShould be 5 lines.\n\n- A bullet point";
   EXPECT_EQ(5, GitGud::Ast::split(test, '\n').size());
+}
+
+TEST(ParseMessage, NodeCount)
+{
+  GitGud::Commit commit("", "",
+    "A summary\n\nShould be 6 nodes\nso count them.\n\n- A bullet point", 0);
+  EXPECT_EQ(6, commit.getAst()->getNodes().size());
 }
 
 TEST(PosTagger, TagsSize)
@@ -52,4 +59,17 @@ TEST(Summary, Suggestions)
 {
   GitGud::Commit commit("", "", "added a bad sumary", 0);
   EXPECT_GE(2, commit.getSuggestions().size());
+}
+
+TEST(Scoring, BlankLineSuggestion)
+{
+  GitGud::Commit commit("", "", "Add new file\nAdd a new config file.", 0);
+  for (auto suggestion : commit.getSuggestions())
+  {
+    std::cout << suggestion.first << std::endl;
+    if (suggestion.first == 2 &&
+        suggestion.second.find("blank line") != std::string::npos)
+      return;
+  }
+  EXPECT_TRUE(false);
 }

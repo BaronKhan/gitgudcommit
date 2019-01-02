@@ -9,6 +9,14 @@ namespace GitGud
 {
   class MessageNode;
 
+  enum NodeType
+  {
+    SUMMARY,
+    BLANK,
+    BODY,
+    POINT
+  };
+
   // Stores the internal representation of a commit message as a vector of nodes
   class Ast
   {
@@ -47,6 +55,7 @@ namespace GitGud
 
     virtual const std::string & getData() = 0;
     virtual double getScore() const = 0;
+    virtual NodeType getType() const = 0;
 
     void addSuggestion(unsigned line_number, const std::string & suggestion) const;
 
@@ -65,6 +74,7 @@ namespace GitGud
 
     virtual const std::string & getData();
     virtual double getScore() const;
+    virtual NodeType getType() const;
   };
 
   //////////////////////////////////////////////////////////////////////////////
@@ -79,6 +89,7 @@ namespace GitGud
 
     virtual const std::string & getData();
     virtual double getScore() const;
+    virtual NodeType getType() const;
   };
 
   //////////////////////////////////////////////////////////////////////////////
@@ -94,6 +105,7 @@ namespace GitGud
 
     virtual const std::string & getData();
     virtual double getScore() const;
+    virtual NodeType getType() const;
   };
 
   //////////////////////////////////////////////////////////////////////////////
@@ -109,6 +121,7 @@ namespace GitGud
 
     virtual const std::string & getData();
     virtual double getScore() const;
+    virtual NodeType getType() const;
   };
 
 }

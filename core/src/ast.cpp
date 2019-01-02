@@ -34,7 +34,7 @@ namespace GitGud
     MessageNode* title_node = new SummaryNode(this, lines[0]);
     m_nodes.push_back(title_node);
     if (lines.size() > 1) {
-      for (unsigned i=2; i<lines.size(); i++)
+      for (unsigned i=1; i<lines.size(); i++)
       {
         MessageNode *new_node;
         auto line = lines[i];
@@ -61,7 +61,11 @@ namespace GitGud
     m_score = std::min(std::max(0.0, score/m_nodes.size()), 5.0);
 
     // TODO: adjust score based on ratio of lines changed to message lines
-    // TODO: check if 2nd line is a blank line
+
+    if (m_nodes.size() > 1 && m_nodes[1]->getType() != NodeType::BLANK) {
+      m_score = std::max(0.0, m_score-0.1);
+      addSuggestion(2, "Separate the summary from the message body with a blank line.");
+    }
 
     for (unsigned i=0; i<m_suggestions.size(); i++)
     {
@@ -190,6 +194,13 @@ namespace GitGud
 
   //////////////////////////////////////////////////////////////////////////////
 
+  NodeType SummaryNode::getType() const
+  {
+    return NodeType::SUMMARY;
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
   BlankNode::BlankNode(Ast *owner, unsigned line_number)
   : MessageNode(owner), m_line_number(line_number), m_blank("")
   {
@@ -207,6 +218,13 @@ namespace GitGud
   double BlankNode::getScore() const
   {
     return 5.0;
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  NodeType BlankNode::getType() const
+  {
+    return NodeType::BLANK;
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -255,6 +273,13 @@ namespace GitGud
 
   //////////////////////////////////////////////////////////////////////////////
 
+  NodeType BodyNode::getType() const
+  {
+    return NodeType::POINT;
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
   PointNode::PointNode(Ast *owner, unsigned line_number, const std::string &point)
   : MessageNode(owner), m_line_number(line_number), m_point(point)
   {
@@ -295,6 +320,13 @@ namespace GitGud
     }
 
     return std::max(0.0, score);
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  NodeType PointNode::getType() const
+  {
+    return NodeType::POINT;
   }
 
 }
