@@ -301,7 +301,7 @@ namespace GitGud
     if (m_point.length() > 72)
     {
       addSuggestion(m_line_number, "Length of bullet point is greater than 72 characters.");
-      score -= 1.0;
+      score -= 0.1 * (m_point.length() - 72);
     }
 
     auto words = Tagger::getInstance().sentence2Vec(m_point);
