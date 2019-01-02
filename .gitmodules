@@ -4,3 +4,6 @@
 [submodule "core/deps/citar-cxx"]
 	path = core/deps/citar-cxx
 	url = https://github.com/BaronKhan/citar-cxx
+[submodule "core/deps/hunspell"]
+	path = core/deps/hunspell
+	url = https://github.com/hunspell/hunspell
