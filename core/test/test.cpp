@@ -4,13 +4,17 @@
 #include "gitgudcommit.hpp"
 #include "ast.hpp"
 #include "tagger.hpp"
+#include "spell.hpp"
 
 int main(int argc, char **argv)
 {
   if (!GitGud::Tagger::getInstance().initPosTagger(
-    "models/brown-simplified.ngrams",
-    "models/brown-simplified.lexicon"
-  ))
+      "models/brown-simplified.ngrams",
+      "models/brown-simplified.lexicon")
+    || !GitGud::SpellChecker::getInstance().initSpellChecker(
+      "models/english-us.aff",
+      "models/english-us.dic")
+  )
     return EXIT_FAILURE;
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
@@ -55,16 +59,41 @@ TEST(PosTagger, VerbPresent)
   }
 }
 
+TEST(SpellChecker, Simple)
+{
+  EXPECT_FALSE(GitGud::SpellChecker::getInstance().spellingError("update"));
+  EXPECT_TRUE(GitGud::SpellChecker::getInstance().spellingError("updte"));
+}
+
+TEST(SpellChecker, Suggestion)
+{
+  EXPECT_TRUE(GitGud::SpellChecker::getInstance().spellingSuggestion("misstake").size() >= 1);
+  std::vector<std::string> v = GitGud::SpellChecker::getInstance().spellingSuggestion("misstake");
+  EXPECT_TRUE(v[0] == "mistake");
+}
+
+TEST(SpellChecker, ErrorCount)
+{
+  GitGud::Commit commit("", "", "added thwee speling misstakes", 0);
+  unsigned spelling_error_count = 0;
+  for (auto &suggestion : commit.getSuggestions())
+  {
+    if (suggestion.second.find("spelling error") != std::string::npos)
+      spelling_error_count++;
+  }
+  EXPECT_EQ(3, spelling_error_count);
+}
+
 TEST(Summary, Suggestions)
 {
   GitGud::Commit commit("", "", "added a bad sumary", 0);
-  EXPECT_GE(2, commit.getSuggestions().size());
+  EXPECT_GE(3, commit.getSuggestions().size());
 }
 
 TEST(Scoring, BlankLineSuggestion)
 {
   GitGud::Commit commit("", "", "Add new file\nAdd a new config file.", 0);
-  for (auto suggestion : commit.getSuggestions())
+  for (auto &suggestion : commit.getSuggestions())
   {
     std::cout << suggestion.first << std::endl;
     if (suggestion.first == 2 &&

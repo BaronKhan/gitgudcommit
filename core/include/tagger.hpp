@@ -13,7 +13,8 @@ namespace GitGud
     bool m_initialised;
     citar::tagger::HMMTagger *m_hmmTagger;
 
-    Tagger() : m_initialised(false) {}
+    Tagger() : m_initialised(false), m_hmmTagger(nullptr) {}
+    ~Tagger();
 
   public:
     static Tagger & getInstance()

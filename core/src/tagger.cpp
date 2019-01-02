@@ -88,4 +88,12 @@ namespace GitGud
     return tagSentence(sentence2Vec(sentence));
   }
 
+  //////////////////////////////////////////////////////////////////////////////
+
+  Tagger::~Tagger()
+  {
+    if (m_initialised)
+      delete m_hmmTagger;
+  }
+
 }

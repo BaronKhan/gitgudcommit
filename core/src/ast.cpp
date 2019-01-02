@@ -3,6 +3,7 @@
 #include <cctype>
 #include "ast.hpp"
 #include "tagger.hpp"
+#include "spell.hpp"
 
 namespace GitGud
 {
@@ -175,6 +176,25 @@ namespace GitGud
     }
 
     auto words = Tagger::getInstance().sentence2Vec(m_summary);
+    auto words_size = words.size();
+
+    for (unsigned i=0; i<words_size; ++i)
+    {
+      auto word = words[i];
+      if (SpellChecker::getInstance().spellingError(word)) {
+        std::stringstream ss;
+        std::vector<std::string> spelling_suggestions = SpellChecker::getInstance().
+            spellingSuggestion(word);
+        if (spelling_suggestions.size() > 0)
+          ss << "\"" << words[i] << "\" - possible spelling error. Did you mean \"" <<
+             spelling_suggestions[0] << "\"?";
+        else
+          ss << "\"" << words[i] << "\" - possible spelling error.";
+        addSuggestion(1, ss.str());
+        score -= 1.0/words_size;
+      }
+    }
+
     auto tags = Tagger::getInstance().tagSentence(words);
     auto tags_size = tags.size();
     for (unsigned i=0; i<tags_size; ++i)
@@ -254,8 +274,28 @@ namespace GitGud
     }
 
     auto words = Tagger::getInstance().sentence2Vec(m_line);
+    auto words_size = words.size();
+
+    for (unsigned i=0; i<words_size; ++i)
+    {
+      auto word = words[i];
+      if (SpellChecker::getInstance().spellingError(word)) {
+        std::stringstream ss;
+        std::vector<std::string> spelling_suggestions = SpellChecker::getInstance().
+            spellingSuggestion(word);
+        if (spelling_suggestions.size() > 0)
+          ss << "\"" << words[i] << "\" - possible spelling error. Did you mean \"" <<
+             spelling_suggestions[0] << "\"?";
+        else
+          ss << "\"" << words[i] << "\" - possible spelling error.";
+        addSuggestion(1, ss.str());
+        score -= 1.0/words_size;
+      }
+    }
+
     auto tags = Tagger::getInstance().tagSentence(words);
     auto tags_size = tags.size();
+
     for (unsigned i=0; i<tags_size; ++i)
     {
       auto tag = tags[i];
@@ -305,8 +345,28 @@ namespace GitGud
     }
 
     auto words = Tagger::getInstance().sentence2Vec(m_point);
+    auto words_size = words.size();
+
+    for (unsigned i=0; i<words_size; ++i)
+    {
+      auto word = words[i];
+      if (SpellChecker::getInstance().spellingError(word)) {
+        std::stringstream ss;
+        std::vector<std::string> spelling_suggestions = SpellChecker::getInstance().
+            spellingSuggestion(word);
+        if (spelling_suggestions.size() > 0)
+          ss << "\"" << words[i] << "\" - possible spelling error. Did you mean \"" <<
+             spelling_suggestions[0] << "\"?";
+        else
+          ss << "\"" << words[i] << "\" - possible spelling error.";
+        addSuggestion(1, ss.str());
+        score -= 1.0/words_size;
+      }
+    }
+
     auto tags = Tagger::getInstance().tagSentence(words);
     auto tags_size = tags.size();
+
     for (unsigned i=0; i<tags_size; ++i)
     {
       auto tag = tags[i];
