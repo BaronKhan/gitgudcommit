@@ -289,7 +289,7 @@ namespace GitGud
       //          spelling_suggestions[0] << "\"?";
       //     else
       //       ss << "\"" << words[i] << "\" - possible spelling error.";
-      //     addSuggestion(1, ss.str());
+      //     addSuggestion(i+1, ss.str());
       //     score -= 1.0/words_size;
       //   }
       // }
@@ -299,7 +299,7 @@ namespace GitGud
       {
         std::stringstream ss;
         ss << "\"" << words[i] << "\" - consider using the present tense form.";
-        addSuggestion(1, ss.str());
+        addSuggestion(i+1, ss.str());
         score -= 1.0/tags_size;
       }
     }
@@ -359,7 +359,7 @@ namespace GitGud
       //          spelling_suggestions[0] << "\"?";
       //     else
       //       ss << "\"" << words[i] << "\" - possible spelling error.";
-      //     addSuggestion(1, ss.str());
+      //     addSuggestion(i+1, ss.str());
       //     score -= 1.0/words_size;
       //   }
       // }
@@ -369,7 +369,7 @@ namespace GitGud
       {
         std::stringstream ss;
         ss << "\"" << words[i] << "\" - consider using the present tense form.";
-        addSuggestion(1, ss.str());
+        addSuggestion(i+1, ss.str());
         score -= 1.0/tags_size;
       }
     }

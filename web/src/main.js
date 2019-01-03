@@ -21,6 +21,7 @@ var analysisProgress = 0;
 
 var fileCount = 0;
 var repoName = "";
+var files = [];
 
 var reloading = false;
 
@@ -76,6 +77,7 @@ gitworker.addEventListener('message', function(e) {
       return; //Don't log the progress percentage
     } else if (e.data.hasOwnProperty('files_processed')) {
       if (fileCount > 0) {
+        files.push(e.data.file);
         //NB: clone progress is file processed here
         cloneProgress = Math.floor(e.data.files_processed*100)/fileCount;
         setProgressBar();
@@ -140,6 +142,7 @@ function initCommitAnalysis() {
   analysisProgress = 0;
   fileCount = 0;
   repoName = "";
+  files = [];
   setProgressBar();
   removeSuccessAlert();
   removeFailureAlert();
@@ -182,6 +185,7 @@ function analyseCommits() {
   var numCommits = commits.length;
   console.log("Total commits: "+numCommits);
   analysisProgress = 50;
+  coreworker.postMessage({ 'cmd': 'files', 'files': files })
   for (i=0; i<numCommits; i++) {
     var commit = commits[i];
     timestamps.push(epochToString(parseInt(commit.time)*1000));

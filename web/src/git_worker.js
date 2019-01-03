@@ -33,7 +33,8 @@ self.addEventListener('message', function(e) {
       var commit;
       do {
         commit = jsgitwalknextcommit();
-        if (commit != "___NULL___" && !commit.includes("Merge pull request")) {
+        if (commit != "___NULL___" && !commit.includes("Merge pull request") &&
+            !commit.includes("Merge branch")) {
           try {
             jsonObj = JSON.parse(commit
               .replaceAll('&', '&amp;')
@@ -56,7 +57,8 @@ self.addEventListener('message', function(e) {
             commit = "<UNKNOWN>";
           }
         }
-      } while(commit.includes("Merge pull request") || commit.includes("<UNKNOWN>"));
+      } while(commit.includes("Merge pull request") ||
+          commit.includes("Merge branch") || commit.includes("<UNKNOWN>"));
       
       if (commit == "___NULL___") {
         self.postMessage("___NULL___")
@@ -92,7 +94,7 @@ self.addEventListener('message', function(e) {
       try { FS.writeFile('/workdir/'+dir_name+'/'+base_name, data.file_data); }
       catch(e) { console.log("Error while loading '"+base_name+"': "+e.message); }
       filesProcessed++;
-      self.postMessage({'files_processed': filesProcessed })
+      self.postMessage({'files_processed': filesProcessed, 'file': base_name })
       break;
     case 'open':
       FS.chdir(data.repo_name);

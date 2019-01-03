@@ -1,5 +1,6 @@
 const startTime = new Date().getTime();
 var started = false;
+var files = [];
 importScripts("gitgudcore.js");
 
 Module['onRuntimeInitialized'] = () => {
@@ -13,6 +14,9 @@ self.addEventListener('message', function(e) {
   if (!started) { return; }
   var data = e.data;
   switch (data.cmd) {
+    case "files":
+      files = data.files;
+      break;
     case "analyse":
       var commit = data.commit;
       var analysedCommit = new Module.Commit(commit.author, commit.email, commit.message, parseInt(commit.time));
