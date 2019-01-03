@@ -239,7 +239,7 @@ function endWalk() {
 
 function setProgressBar() {
   var elem = document.getElementById("cloneProgressBar");
-  var value = Math.ceil((cloneProgress * 0.75) + (analysisProgress * 0.25)) + '%';
+  var value = Math.ceil((cloneProgress * 0.3) + (analysisProgress * 0.7)) + '%';
   elem.style.width = value;
   elem.innerHTML = value;
 

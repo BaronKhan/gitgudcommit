@@ -1,5 +1,7 @@
 #include <cstdlib>
+#include <ctime>
 #include <algorithm>
+#include <sstream>
 #include <gtest/gtest.h>
 #include "gitgudcommit.hpp"
 #include "ast.hpp"
@@ -95,10 +97,25 @@ TEST(Scoring, BlankLineSuggestion)
   GitGud::Commit commit("", "", "Add new file\nAdd a new config file.", 0);
   for (auto &suggestion : commit.getSuggestions())
   {
-    std::cout << suggestion.first << std::endl;
     if (suggestion.first == 2 &&
         suggestion.second.find("blank line") != std::string::npos)
       return;
   }
-  EXPECT_TRUE(false);
+  FAIL();
+}
+
+TEST(Processing, Timing)
+{
+  const clock_t begin_time = clock();
+  for (int i=0; i < 2000; i++)
+  {
+    GitGud::Commit commit("", "", "This is a summary with some words\nThis is the body\n\
+      with lots of words in it.\nIt is so long antidisestablishmentarianism\n\
+      haaaaaaaaaaaaaaaaaaaaaaaandssss Thanks for your time\n- But let's get straight to the point", 0);
+    float time = float(clock() - begin_time) / CLOCKS_PER_SEC;
+    if (time > 10.0)
+      FAIL() << "Processing of 2000 commits exceeded 7 seconds";
+  }
+  std::cout << "Processing of 2000 commits took " <<
+    float(clock() - begin_time) / CLOCKS_PER_SEC << "s" << std::endl;
 }

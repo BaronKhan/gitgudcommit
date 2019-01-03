@@ -132,7 +132,7 @@ namespace GitGud
 
   //////////////////////////////////////////////////////////////////////////////
 
-  void MessageNode::addSuggestion(
+  inline void MessageNode::addSuggestion(
     unsigned line_number, const std::string & suggestion
   ) const
   {
@@ -169,16 +169,16 @@ namespace GitGud
       score -= 1.9 + (0.1 * (m_summary.length() - 50));
     }
 
-    if (!isupper(m_summary[0]))  // TODO: OR if begins with a file name
+    if (!(isupper(m_summary[0]) || m_summary[0] == '['))  // TODO: OR if begins with a file name
     {
       addSuggestion(1, "Summary should begin with a capital letter or filename.");
       score -= 1.0;
     }
 
     auto words = Tagger::getInstance().sentence2Vec(m_summary);
-    auto words_size = words.size();
+    auto words_size = std::min(words.size(), static_cast<size_t>(12));
     auto tags = Tagger::getInstance().tagSentence(words);
-    auto tags_size = tags.size();
+    auto tags_size = std::min(tags.size(), static_cast<size_t>(12));
 
     for (unsigned i=0; i<words_size; ++i)
     {
@@ -271,36 +271,35 @@ namespace GitGud
     }
 
     auto words = Tagger::getInstance().sentence2Vec(m_line);
-    auto words_size = words.size();
-
-    // for (unsigned i=0; i<words_size; ++i)
-    // {
-    //   auto word = words[i];
-    //   if (SpellChecker::getInstance().spellingError(word)) {
-    //     std::stringstream ss;
-    //     std::vector<std::string> spelling_suggestions = SpellChecker::getInstance().
-    //         spellingSuggestion(word);
-    //     if (spelling_suggestions.size() > 0)
-    //       ss << "\"" << words[i] << "\" - possible spelling error. Did you mean \"" <<
-    //          spelling_suggestions[0] << "\"?";
-    //     else
-    //       ss << "\"" << words[i] << "\" - possible spelling error.";
-    //     addSuggestion(1, ss.str());
-    //     score -= 1.0/words_size;
-    //   }
-    // }
-
+    auto words_size = std::min(words.size(), static_cast<size_t>(12));
     auto tags = Tagger::getInstance().tagSentence(words);
-    auto tags_size = tags.size();
+    auto tags_size = std::min(tags.size(), static_cast<size_t>(12));
 
-    for (unsigned i=0; i<tags_size; ++i)
+    for (unsigned i=0; i<words_size; ++i)
     {
+      // auto word = words[i];
+      // unsigned word_length = word.length();
+      // if (word_length > 10 && word_length < 15) {
+      //   if (SpellChecker::getInstance().spellingError(word)) {
+      //     std::stringstream ss;
+      //     std::vector<std::string> spelling_suggestions = SpellChecker::getInstance().
+      //         spellingSuggestion(word);
+      //     if (spelling_suggestions.size() > 0)
+      //       ss << "\"" << words[i] << "\" - possible spelling error. Did you mean \"" <<
+      //          spelling_suggestions[0] << "\"?";
+      //     else
+      //       ss << "\"" << words[i] << "\" - possible spelling error.";
+      //     addSuggestion(1, ss.str());
+      //     score -= 1.0/words_size;
+      //   }
+      // }
+
       auto tag = tags[i];
       if (tag.find("VBN") != std::string::npos || tag.find("VBD") != std::string::npos)
       {
         std::stringstream ss;
         ss << "\"" << words[i] << "\" - consider using the present tense form.";
-        addSuggestion(m_line_number, ss.str());
+        addSuggestion(1, ss.str());
         score -= 1.0/tags_size;
       }
     }
@@ -342,36 +341,35 @@ namespace GitGud
     }
 
     auto words = Tagger::getInstance().sentence2Vec(m_point);
-    auto words_size = words.size();
-
-    // for (unsigned i=0; i<words_size; ++i)
-    // {
-    //   auto word = words[i];
-    //   if (SpellChecker::getInstance().spellingError(word)) {
-    //     std::stringstream ss;
-    //     std::vector<std::string> spelling_suggestions = SpellChecker::getInstance().
-    //         spellingSuggestion(word);
-    //     if (spelling_suggestions.size() > 0)
-    //       ss << "\"" << words[i] << "\" - possible spelling error. Did you mean \"" <<
-    //          spelling_suggestions[0] << "\"?";
-    //     else
-    //       ss << "\"" << words[i] << "\" - possible spelling error.";
-    //     addSuggestion(1, ss.str());
-    //     score -= 1.0/words_size;
-    //   }
-    // }
-
+    auto words_size = std::min(words.size(), static_cast<size_t>(12));
     auto tags = Tagger::getInstance().tagSentence(words);
-    auto tags_size = tags.size();
+    auto tags_size = std::min(tags.size(), static_cast<size_t>(12));
 
-    for (unsigned i=0; i<tags_size; ++i)
+    for (unsigned i=0; i<words_size; ++i)
     {
+      // auto word = words[i];
+      // unsigned word_length = word.length();
+      // if (word_length > 10 && word_length < 15) {
+      //   if (SpellChecker::getInstance().spellingError(word)) {
+      //     std::stringstream ss;
+      //     std::vector<std::string> spelling_suggestions = SpellChecker::getInstance().
+      //         spellingSuggestion(word);
+      //     if (spelling_suggestions.size() > 0)
+      //       ss << "\"" << words[i] << "\" - possible spelling error. Did you mean \"" <<
+      //          spelling_suggestions[0] << "\"?";
+      //     else
+      //       ss << "\"" << words[i] << "\" - possible spelling error.";
+      //     addSuggestion(1, ss.str());
+      //     score -= 1.0/words_size;
+      //   }
+      // }
+
       auto tag = tags[i];
       if (tag.find("VBN") != std::string::npos || tag.find("VBD") != std::string::npos)
       {
         std::stringstream ss;
         ss << "\"" << words[i] << "\" - consider using the present tense form.";
-        addSuggestion(m_line_number, ss.str());
+        addSuggestion(1, ss.str());
         score -= 1.0/tags_size;
       }
     }
