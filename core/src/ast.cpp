@@ -65,7 +65,7 @@ namespace GitGud
 
     if (m_nodes.size() > 1 && m_nodes[1]->getType() != NodeType::BLANK) {
       m_score = std::max(0.0, m_score-0.1);
-      addSuggestion(2, "Separate the summary from the message body with a blank line.");
+      addSuggestion(2, "Separate the summary and the message body with a blank line.");
     }
 
     for (unsigned i=0; i<m_suggestions.size(); i++)
@@ -177,6 +177,8 @@ namespace GitGud
 
     auto words = Tagger::getInstance().sentence2Vec(m_summary);
     auto words_size = words.size();
+    auto tags = Tagger::getInstance().tagSentence(words);
+    auto tags_size = tags.size();
 
     for (unsigned i=0; i<words_size; ++i)
     {
@@ -193,12 +195,7 @@ namespace GitGud
         addSuggestion(1, ss.str());
         score -= 1.0/words_size;
       }
-    }
 
-    auto tags = Tagger::getInstance().tagSentence(words);
-    auto tags_size = tags.size();
-    for (unsigned i=0; i<tags_size; ++i)
-    {
       auto tag = tags[i];
       if (tag.find("VBN") != std::string::npos || tag.find("VBD") != std::string::npos)
       {
@@ -276,22 +273,22 @@ namespace GitGud
     auto words = Tagger::getInstance().sentence2Vec(m_line);
     auto words_size = words.size();
 
-    for (unsigned i=0; i<words_size; ++i)
-    {
-      auto word = words[i];
-      if (SpellChecker::getInstance().spellingError(word)) {
-        std::stringstream ss;
-        std::vector<std::string> spelling_suggestions = SpellChecker::getInstance().
-            spellingSuggestion(word);
-        if (spelling_suggestions.size() > 0)
-          ss << "\"" << words[i] << "\" - possible spelling error. Did you mean \"" <<
-             spelling_suggestions[0] << "\"?";
-        else
-          ss << "\"" << words[i] << "\" - possible spelling error.";
-        addSuggestion(1, ss.str());
-        score -= 1.0/words_size;
-      }
-    }
+    // for (unsigned i=0; i<words_size; ++i)
+    // {
+    //   auto word = words[i];
+    //   if (SpellChecker::getInstance().spellingError(word)) {
+    //     std::stringstream ss;
+    //     std::vector<std::string> spelling_suggestions = SpellChecker::getInstance().
+    //         spellingSuggestion(word);
+    //     if (spelling_suggestions.size() > 0)
+    //       ss << "\"" << words[i] << "\" - possible spelling error. Did you mean \"" <<
+    //          spelling_suggestions[0] << "\"?";
+    //     else
+    //       ss << "\"" << words[i] << "\" - possible spelling error.";
+    //     addSuggestion(1, ss.str());
+    //     score -= 1.0/words_size;
+    //   }
+    // }
 
     auto tags = Tagger::getInstance().tagSentence(words);
     auto tags_size = tags.size();
@@ -347,22 +344,22 @@ namespace GitGud
     auto words = Tagger::getInstance().sentence2Vec(m_point);
     auto words_size = words.size();
 
-    for (unsigned i=0; i<words_size; ++i)
-    {
-      auto word = words[i];
-      if (SpellChecker::getInstance().spellingError(word)) {
-        std::stringstream ss;
-        std::vector<std::string> spelling_suggestions = SpellChecker::getInstance().
-            spellingSuggestion(word);
-        if (spelling_suggestions.size() > 0)
-          ss << "\"" << words[i] << "\" - possible spelling error. Did you mean \"" <<
-             spelling_suggestions[0] << "\"?";
-        else
-          ss << "\"" << words[i] << "\" - possible spelling error.";
-        addSuggestion(1, ss.str());
-        score -= 1.0/words_size;
-      }
-    }
+    // for (unsigned i=0; i<words_size; ++i)
+    // {
+    //   auto word = words[i];
+    //   if (SpellChecker::getInstance().spellingError(word)) {
+    //     std::stringstream ss;
+    //     std::vector<std::string> spelling_suggestions = SpellChecker::getInstance().
+    //         spellingSuggestion(word);
+    //     if (spelling_suggestions.size() > 0)
+    //       ss << "\"" << words[i] << "\" - possible spelling error. Did you mean \"" <<
+    //          spelling_suggestions[0] << "\"?";
+    //     else
+    //       ss << "\"" << words[i] << "\" - possible spelling error.";
+    //     addSuggestion(1, ss.str());
+    //     score -= 1.0/words_size;
+    //   }
+    // }
 
     auto tags = Tagger::getInstance().tagSentence(words);
     auto tags_size = tags.size();

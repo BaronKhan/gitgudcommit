@@ -14,7 +14,8 @@ echo "building gitgudcore.js, gitgudcore.wasm and gitgudcore.data"
 em++ -s ALLOW_MEMORY_GROWTH=1 -s ASSERTIONS=1 -s FORCE_FILESYSTEM=1 \
 -s "EXTRA_EXPORTED_RUNTIME_METHODS=['FS']" --std=c++11 --bind \
 --preload-file ../core/models -Oz jsgitgudcore.cpp ../core/src/*.cpp \
-../core/lib/libcitar_web.a -I../core/include -I../core/deps/citar-cxx/include \
--I../core/deps/citar-cxx/build/include -o src/gitgudcore.js
+../core/lib/libcitar_web.a ../core/lib/libhunspell-1.7_web.a -I../core/include \
+-I../core/deps/citar-cxx/include -I../core/deps/citar-cxx/build/include \
+-I ../core/deps/hunspell/src -o src/gitgudcore.js
 
 echo "built gitgudcore.js, gitgudcore.wasm and gitgudcore.data"

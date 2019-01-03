@@ -5,6 +5,7 @@
 #include <utility>
 
 #include "tagger.hpp"
+#include "spell.hpp"
 #include "gitgudcommit.hpp"
 
 using namespace emscripten;
@@ -17,8 +18,17 @@ void jsInitPosTagger()
   );
 }
 
+void jsInitSpellChecker()
+{
+  GitGud::SpellChecker::getInstance().initSpellChecker(
+    "/core/models/english-us.aff",
+    "/core/models/english-us.dic"
+  );
+}
+
 EMSCRIPTEN_BINDINGS(my_module) {
   function("jsInitPosTagger", &jsInitPosTagger);
+  function("jsInitSpellChecker", &jsInitSpellChecker);
   register_vector<std::string>("vector<string>");
   register_vector<unsigned>("vector<unsigned>");
 

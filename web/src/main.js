@@ -360,8 +360,6 @@ function populatePanel() {
 
 $(window).resize(function() {
   resizeUrlBox();
-  populatePanel();
-  updateScoreChart();
 });
 
 function resizeUrlBox() {

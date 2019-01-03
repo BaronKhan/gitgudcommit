@@ -5,6 +5,7 @@ importScripts("gitgudcore.js");
 Module['onRuntimeInitialized'] = () => {
   console.log('gitgudcore ready in webworker.',(new Date().getTime() - startTime),'ms startup time');
   Module.jsInitPosTagger();
+  Module.jsInitSpellChecker();
   started = true;
 };
 
