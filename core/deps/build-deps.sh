@@ -5,7 +5,7 @@ cd "$(dirname "$0")"
 
 echo "building citar-cxx"
 
-if [ -z "$(ls -A citar-cxx)" ]; then
+if [ -z "$(ls -A citar-cxx)" ] or [ -z "$(ls -A hunspell)" ]; then
   echo "initialising citar-cxx submodule"
   git submodule init
   echo "updating submodules"

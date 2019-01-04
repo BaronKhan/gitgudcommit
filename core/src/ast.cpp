@@ -84,7 +84,6 @@ namespace GitGud
     return m_nodes;
   }
 
-
   //////////////////////////////////////////////////////////////////////////////
 
   std::vector<std::pair<unsigned, std::string>> & Ast::getSuggestions()
