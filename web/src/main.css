@@ -1,5 +1,9 @@
 html,body { height:90%; }
 
+body {
+  overscroll-behavior: contain;
+}
+
 #cloneProgress {
   width: 100%;
   background-color: #ddd;

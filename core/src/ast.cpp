@@ -157,8 +157,10 @@ namespace GitGud
 
   double SummaryNode::getScore() const
   {
-    if (m_summary.length() < 1)
+    if (m_summary.length() < 2) {
+      addSuggestion(1, "Summary is too short.");
       return 0.0;
+    }
 
     double score = 5.0;
 
@@ -278,7 +280,7 @@ namespace GitGud
     {
       // auto word = words[i];
       // unsigned word_length = word.length();
-      // if (word_length > 10 && word_length < 15) {
+      // if (word_length > 3 && word_length < 9) {
       //   if (SpellChecker::getInstance().spellingError(word)) {
       //     std::stringstream ss;
       //     std::vector<std::string> spelling_suggestions = SpellChecker::getInstance().
@@ -348,7 +350,7 @@ namespace GitGud
     {
       // auto word = words[i];
       // unsigned word_length = word.length();
-      // if (word_length > 10 && word_length < 15) {
+      // if (word_length > 3 && word_length < 9) {
       //   if (SpellChecker::getInstance().spellingError(word)) {
       //     std::stringstream ss;
       //     std::vector<std::string> spelling_suggestions = SpellChecker::getInstance().
