@@ -278,22 +278,22 @@ namespace GitGud
 
     for (unsigned i=0; i<words_size; ++i)
     {
-      // auto word = words[i];
-      // unsigned word_length = word.length();
-      // if (word_length > 3 && word_length < 9) {
-      //   if (SpellChecker::getInstance().spellingError(word)) {
-      //     std::stringstream ss;
-      //     std::vector<std::string> spelling_suggestions = SpellChecker::getInstance().
-      //         spellingSuggestion(word);
-      //     if (spelling_suggestions.size() > 0)
-      //       ss << "\"" << words[i] << "\" - possible spelling error. Did you mean \"" <<
-      //          spelling_suggestions[0] << "\"?";
-      //     else
-      //       ss << "\"" << words[i] << "\" - possible spelling error.";
-      //     addSuggestion(i+1, ss.str());
-      //     score -= 1.0/words_size;
-      //   }
-      // }
+      auto word = words[i];
+      unsigned word_length = word.length();
+      if (word_length > 3 && word_length < 9) {
+        if (SpellChecker::getInstance().spellingError(word)) {
+          std::stringstream ss;
+          std::vector<std::string> spelling_suggestions = SpellChecker::getInstance().
+              spellingSuggestion(word);
+          if (spelling_suggestions.size() > 0)
+            ss << "\"" << words[i] << "\" - possible spelling error. Did you mean \"" <<
+               spelling_suggestions[0] << "\"?";
+          else
+            ss << "\"" << words[i] << "\" - possible spelling error.";
+          addSuggestion(i+1, ss.str());
+          score -= 1.0/words_size;
+        }
+      }
 
       auto tag = tags[i];
       if (tag.find("VBN") != std::string::npos || tag.find("VBD") != std::string::npos)
@@ -348,22 +348,22 @@ namespace GitGud
 
     for (unsigned i=0; i<words_size; ++i)
     {
-      // auto word = words[i];
-      // unsigned word_length = word.length();
-      // if (word_length > 3 && word_length < 9) {
-      //   if (SpellChecker::getInstance().spellingError(word)) {
-      //     std::stringstream ss;
-      //     std::vector<std::string> spelling_suggestions = SpellChecker::getInstance().
-      //         spellingSuggestion(word);
-      //     if (spelling_suggestions.size() > 0)
-      //       ss << "\"" << words[i] << "\" - possible spelling error. Did you mean \"" <<
-      //          spelling_suggestions[0] << "\"?";
-      //     else
-      //       ss << "\"" << words[i] << "\" - possible spelling error.";
-      //     addSuggestion(i+1, ss.str());
-      //     score -= 1.0/words_size;
-      //   }
-      // }
+      auto word = words[i];
+      unsigned word_length = word.length();
+      if (word_length > 3 && word_length < 9) {
+        if (SpellChecker::getInstance().spellingError(word)) {
+          std::stringstream ss;
+          std::vector<std::string> spelling_suggestions = SpellChecker::getInstance().
+              spellingSuggestion(word);
+          if (spelling_suggestions.size() > 0)
+            ss << "\"" << words[i] << "\" - possible spelling error. Did you mean \"" <<
+               spelling_suggestions[0] << "\"?";
+          else
+            ss << "\"" << words[i] << "\" - possible spelling error.";
+          addSuggestion(i+1, ss.str());
+          score -= 1.0/words_size;
+        }
+      }
 
       auto tag = tags[i];
       if (tag.find("VBN") != std::string::npos || tag.find("VBD") != std::string::npos)

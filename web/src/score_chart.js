@@ -1,6 +1,6 @@
 function updateScoreChart() {
   var ctx = document.getElementById("scoreChart").getContext('2d');
-  var scoreSchart = new Chart(ctx, {
+  var scoreChart = new Chart(ctx, {
     type: 'line',
     data: {
       labels: timestamps_copy,

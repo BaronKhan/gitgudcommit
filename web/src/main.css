@@ -24,3 +24,7 @@ td {
   word-wrap: break-word;
   max-width: 400px;
 }
+
+.rating {
+  font-size: 80px;
+}

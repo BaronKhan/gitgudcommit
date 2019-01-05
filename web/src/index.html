@@ -11,7 +11,7 @@
   <body>
     <h1 class="text-center">Git Gud Commit</h1>
     <center>
-      <p>Enter a GitHub repository URL to analyse its quality!</p>
+      <p>Enter a public GitHub repository URL to analyse its quality!</p>
       <small>You can also upload a zipped archive of a repository.</small>
     </center>
     <div id="panelRepo" class="panel panel-default">
@@ -42,14 +42,18 @@
       <ul class="nav nav-tabs">
         <li class="active"><a data-toggle="tab" href="#summary">Summary</a></li>
         <li><a data-toggle="tab" href="#commits">Commits</a></li>
-        <li><a data-toggle="tab" href="#graphs">Graphs</a></li>
+        <li><a data-toggle="tab" href="#timeline">Timeline</a></li>
         <li><a data-toggle="tab" href="#faq">FAQ</a></li>
       </ul>
 
       <div class="tab-content">
         <div id="summary" class="tab-pane fade in active text-center">
           <h3>SUMMARY</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <p id="repoRating">This repository has a rating of</p>
+          <div class="rating" id="repoStars">
+            <span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>&#x2605;</span>
+          </div>
+          <p id="repoComment">A very good repo.</p>
         </div>
         <div id="commits" class="tab-pane fade">
           <h3 class="text-center">COMMITS</h3>
@@ -138,15 +142,15 @@
             </div>
           </div>
         </div>
-        <div id="graphs" class="tab-pane fade">
-          <h3 class="text-center">Average Commit Score History</h3>
+        <div id="timeline" class="tab-pane fade">
+          <h3 class="text-center">Timeline of Average Commit Score</h3>
           <canvas id="scoreChart" height="85%"></canvas>
         </div>
         <div id="faq" class="tab-pane fade">
           <div class="col-md-7 col-centered">
             <h3 class="text-center">FAQ</h3>
             <h4>What is this?</h4>
-            <p>This website is part of "gitgudcommit" - a suite of tools for improving
+            <p>This website is part of the "Git Gud Commit" project - a suite of tools for improving
             the quality of Git repositories. Using this website, you
             will be able to determine the quality of commit messages in a public
             Git repository.</p>
@@ -182,6 +186,9 @@
             <p>Check out the GitHub repository of this project <a target="_blank"
               href="https://github.com/BaronKhan/gitgudcommit">here</a> for more information.
             Feel free to analyse the repostitory with this tool if you want :)</p>
+            <br><br>
+            <center><small>Git Gud Commit is maintained by Baron Khan
+            and licensed under the MIT License.</small></center>
           </div>
         </div>
       </div>

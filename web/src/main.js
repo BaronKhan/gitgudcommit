@@ -3,6 +3,7 @@ const gitworker = new Worker("git_worker.js");
 
 var currentCommit = {};
 var commits = [];
+var realCommitCount = -1;
 
 // Each index corresponds to the commit element above
 var scores = [];
@@ -38,13 +39,11 @@ coreworker.addEventListener('message', function(e) {
       break;
   }
   var scores_length = scores.length;
-  analysisProgress = 50 + Math.ceil(((scores_length)*50.0)/commits.length);
+  analysisProgress = 25 + Math.ceil(((scores_length)*75.0)/commits.length);
   setProgressBar();
   // Calculate current average and cummulative average
   if (commits.length == scores_length && commits.length == suggestions.length) {
     console.log("All commits have been analysed");
-    populatePanel();
-    analysisInProgress = false;
 
     var sum = 0.0;
     var j = 0;
@@ -54,6 +53,9 @@ coreworker.addEventListener('message', function(e) {
       averageScore = Math.round((sum/j) * 100) / 100;
       cummulativeAverage.push(averageScore);
     }
+    populatePanel();
+    updateScoreChart();
+    analysisInProgress = false;
   }
 }, false);
 
@@ -64,7 +66,7 @@ gitworker.addEventListener('message', function(e) {
       commits.push(currentCommit);
       if (analysisInProgress && !finishedWalk) {
         setProgressBar();
-        analysisProgress = Math.min(analysisProgress+1, 50);
+        analysisProgress = Math.min(analysisProgress+1, 25);
         getNextCommit();
       }
     } else if (e.data.hasOwnProperty('cloneprogress')) {
@@ -93,6 +95,7 @@ gitworker.addEventListener('message', function(e) {
     } else if (e.data.hasOwnProperty("___ERROR___")) {
       removeFailureAlert();
       removeSuccessAlert();
+      removeWarningAlert();
       createFailureAlert(e.data.___ERROR___);
       analysisInProgress = false;
       hideProgressBar();
@@ -109,7 +112,7 @@ gitworker.addEventListener('message', function(e) {
     if (analysisInProgress) {
       finishedWalk = true;
       endWalk();
-      analysisProgress = 50;
+      analysisProgress = 25;
       console.log("Retrieved all commits");
       analyseCommits();
     }
@@ -143,9 +146,11 @@ function initCommitAnalysis() {
   fileCount = 0;
   repoName = "";
   files = [];
+  realCommitCount = -1;
   setProgressBar();
   removeSuccessAlert();
   removeFailureAlert();
+  removeWarningAlert();
 }
 
 function analyseRepo(url) {
@@ -182,9 +187,18 @@ function analyseCommits() {
     hideProgressBar();
     return;
   }
+  var limit = 20000;
   var numCommits = commits.length;
+  if (numCommits > limit) {
+    console.warn("Truncating number of commits from "+numCommits+" to "+limit);
+    createWarningAlert("There are too many commits to analyse. Some will be skipped.");
+    setTimeout(function() { removeWarningAlert(); }, 10000);
+    realCommitCount = numCommits;
+    commits = commits.slice(0, limit);
+  }
+  numCommits = commits.length;
   console.log("Total commits: "+numCommits);
-  analysisProgress = 50;
+  analysisProgress = 25;
   coreworker.postMessage({ 'cmd': 'files', 'files': files })
   for (i=0; i<numCommits; i++) {
     var commit = commits[i];
@@ -224,12 +238,6 @@ function chdir(dir_name) {
 
 function startWalk() {
   gitworker.postMessage({'cmd': 'startwalk'});
-  commits = [];
-  analysedCommits = [];
-  scores = [];
-  suggestions = [];
-  timestamps = [];
-  cummulativeAverage = [];
   finishedWalk = false;
 }
 
@@ -259,6 +267,7 @@ function setProgressBar() {
       block.style.display = "none";
       loading.style.display = "none";
       $("#panelAnalysis").fadeIn();
+      removeWarningAlert();
       createSuccessAlert("The Git repository has been analysed.");
     }, 1000);
   }
@@ -300,6 +309,18 @@ function createFailureAlert(text) {
   }
 }
 
+function createWarningAlert(text) {
+  if(document.getElementById("analyseWarning") == null) {
+    var warningAlert = document.createElement("div");
+    warningAlert.id = "analyseWarning";
+    warningAlert.className="alert alert-warning alert-dismissible fade in text-center";
+    warningAlert.innerHTML="<a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a>\
+                            <strong>Warning: </strong> " + text;
+    var panelRepo = document.getElementById("panelRepo");
+    panelRepo.appendChild(warningAlert);
+  }
+}
+
 function removeSuccessAlert() {
   var successAlert = document.getElementById("analyseSuccess");
   if(successAlert != null) {
@@ -314,8 +335,47 @@ function removeFailureAlert() {
   }
 }
 
+function removeWarningAlert() {
+  var warningAlert = document.getElementById("analyseWarning");
+  if(warningAlert != null) {
+    warningAlert.remove();
+  }
+}
+
 function populatePanel() {
-  $("#commitCount").html(commits.length+" Commits Found");
+  var rating = "";
+  var rating_val = Math.round(averageScore);
+  for (var i=0; i<5; i++) {
+    if (i < rating_val)
+      rating += "<span>&#x2605;</span>";
+    else
+      rating += "<span>&#x2606;</span>";
+  }
+  // console.log("rating = "+rating);
+  $("#repoRating").html("This repository has a rating of "+averageScore+" out of 5.")
+  $("#repoStars").html(rating);
+  switch (rating_val) {
+    case 1:
+      $("#repoComment").html("<p>A poorly maintained repository with weak commit messages.</p>")
+      break;
+    case 2:
+      $("#repoComment").html("<p>A weak repository with below-average commit messages.</p>")
+      break;
+    case 3:
+      $("#repoComment").html("<p>A well-maintained repository with adequate commit messages.</p>")
+      break;
+    case 4:
+      $("#repoComment").html("<p>A high quality repostory with well-written commit messages.</p>")
+      break;
+    case 5:
+      $("#repoComment").html("<p>A near-perfect repository with excellent commit messages.</p>")
+      break;
+  }
+
+  if (realCommitCount != -1)
+    $("#commitCount").html(commits.length+" Commits Found (out of "+realCommitCount+")");
+  else
+    $("#commitCount").html(commits.length+" Commits Found");
 
   if ($(window).width() >= 1000) {
     $("#tableHeadData").html("\
@@ -359,7 +419,6 @@ function populatePanel() {
     tableData += "</tr>\n";
   }
   $("#tableBodyData").html(tableData);
-  updateScoreChart();
 }
 
 $(window).resize(function() {

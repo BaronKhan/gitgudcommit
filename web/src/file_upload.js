@@ -9,7 +9,8 @@ document.getElementById("uploadZip").onchange = function() {
   try {
 
     if(this.files[0].size > 1073741824){
-       throw new Error("File is too big! The maximum file size is 1 GB.");
+       throw new Error("File is too big! The maximum file size is 1 GB. \
+        Tip: create an archive of a bare repository (git clone --bare <url>) contained in a .git folder.");
     };
 
     zip.loadAsync(this.files[0]).then(function(contents) {

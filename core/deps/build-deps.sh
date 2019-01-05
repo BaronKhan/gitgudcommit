@@ -50,6 +50,8 @@ fi
 
 if [ ! -f ../../lib/libhunspell-1.7_web.a ]; then
   echo "building hunspell (web)"
+  dos2unix *
+  autoreconf -vfi
   emconfigure ./configure
   emmake make
   cp src/hunspell/.libs/libhunspell-1.7.a ../../lib/libhunspell-1.7_web.a
@@ -58,5 +60,6 @@ fi
 
 git reset --hard origin/master
 git clean -fd
-dos2unix README
+rm -f README
+ln -s README.md README
 echo "done"
