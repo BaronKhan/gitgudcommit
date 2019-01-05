@@ -464,12 +464,12 @@ setInterval(function() {
   }
 }, 5000);
 
-// Execute a function when the user releases a key on the keyboard
-document.getElementById("urlInput").addEventListener("keyup", function(event) {
-  // Cancel the default action, if needed
-  event.preventDefault();
-  // Number 13 is the "Enter" key on the keyboard
-  if (event.keyCode === 13) {
-    document.getElementById("gitGudButton").click();
-  }
-});
+// // Execute a function when the user releases a key on the keyboard
+// document.getElementById("urlInput").addEventListener("keyup", function(event) {
+//   // Cancel the default action, if needed
+//   event.preventDefault();
+//   // Number 13 is the "Enter" key on the keyboard
+//   if (event.keyCode === 13) {
+//     document.getElementById("gitGudButton").click();
+//   }
+// });

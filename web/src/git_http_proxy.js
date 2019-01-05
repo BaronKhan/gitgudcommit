@@ -18,7 +18,7 @@ const mimeTypes = {
 };
 
 // Maximum 10 requests every minute; else activate circuit breaker
-const requestLimit = 10*25;
+const requestLimit = 10*50;
 const requestBreakTime = 60*1000;
 
 var requestCount = 0;

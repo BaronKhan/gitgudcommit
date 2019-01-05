@@ -8,7 +8,6 @@ Roadmap duration: ~ 1 year
 - [x] Add basic scoring system
 - [x] Add basic testing framework
 - [x] Rule-check for message information
-- [ ] Get scores by contributor
 - [ ] Analyse commits using filenames and keyword mapping
 - [ ] First release of web app *January 2019*
 - [ ] Get commit message write handler for Linux tool

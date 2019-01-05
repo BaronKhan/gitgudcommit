@@ -28,3 +28,7 @@ td {
 .rating {
   font-size: 80px;
 }
+
+#logo {
+  vertical-align: text-top;
+}
