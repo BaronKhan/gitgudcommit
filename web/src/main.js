@@ -98,15 +98,21 @@ gitworker.addEventListener('message', function(e) {
       removeFailureAlert();
       removeSuccessAlert();
       removeWarningAlert();
-      createFailureAlert(e.data.___ERROR___);
+      var error = e.data.___ERROR___;
+      if (error.includes("exists"))
+        createFailureAlert("You already cloned this repository. Please refresh \
+          the page to try again.");
+      else if (error.includes("packet length"))
+        createFailureAlert("An error occurred while cloning the repository ("+error+").");
+      else
+        createFailureAlert(error);
       analysisInProgress = false;
       hideProgressBar();
     } else if (e.data.hasOwnProperty("___TOOBIG___")) {
       if (!reloading) {
         reloading = true;
         // var estimated_size = Math.round(e.data.___TOOBIG___/31);
-        alert("The repository is too big to clone. \
-          The maximum size is 150MB. Please use the 'Upload ZIP' feature.");
+        alert("The repository is too big to clone. The maximum size is 150MB. Please use the 'Upload ZIP' feature.");
       }
       window.location.reload();
     }

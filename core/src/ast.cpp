@@ -158,12 +158,21 @@ namespace GitGud
           std::vector<std::string> spelling_suggestions = SpellChecker::getInstance().
               spellingSuggestion(word);
           if (spelling_suggestions.size() > 0)
-            ss << "\"" << words[i] << "\" - possible spelling error. Did you mean \"" <<
-               spelling_suggestions[0] << "\"?";
+          {
+            if (word != spelling_suggestions[0])
+            {
+              ss << "\"" << words[i] << "\" - possible spelling error. Did you mean \"" <<
+                 spelling_suggestions[0] << "\"?";
+              addSuggestion(line_number, ss.str());
+              score -= 1.0/words_size;
+            }
+          }
           else
+          {
             ss << "\"" << words[i] << "\" - possible spelling error.";
-          addSuggestion(line_number, ss.str());
-          score -= 1.0/words_size;
+            addSuggestion(line_number, ss.str());
+            score -= 1.0/words_size;
+          }
         }
       }
 
