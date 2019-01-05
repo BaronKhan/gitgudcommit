@@ -140,6 +140,44 @@ namespace GitGud
       m_owner->addSuggestion(line_number, suggestion);
   }
 
+  void MessageNode::checkSentence(double & score, const std::string & sentence,
+    unsigned line_number, bool limit_words) const
+  {
+    auto words = Tagger::getInstance().sentence2Vec(sentence);
+    auto tags = Tagger::getInstance().tagWords(words);
+    auto words_size = std::min(words.size(), static_cast<size_t>(12));
+    auto tags_size = std::min(tags.size(), static_cast<size_t>(12));
+
+    for (unsigned i=0; i<words_size; ++i)
+    {
+      auto word = words[i];
+      unsigned word_length = word.length();
+      if (!limit_words || (word_length > 3 && word_length < 9)) {
+        if (SpellChecker::getInstance().spellingError(word)) {
+          std::stringstream ss;
+          std::vector<std::string> spelling_suggestions = SpellChecker::getInstance().
+              spellingSuggestion(word);
+          if (spelling_suggestions.size() > 0)
+            ss << "\"" << words[i] << "\" - possible spelling error. Did you mean \"" <<
+               spelling_suggestions[0] << "\"?";
+          else
+            ss << "\"" << words[i] << "\" - possible spelling error.";
+          addSuggestion(line_number, ss.str());
+          score -= 1.0/words_size;
+        }
+      }
+
+      auto tag = tags[i];
+      if (tag.find("VBN") != std::string::npos || tag.find("VBD") != std::string::npos)
+      {
+        std::stringstream ss;
+        ss << "\"" << words[i] << "\" - consider using the present tense form.";
+        addSuggestion(line_number, ss.str());
+        score -= 1.0/tags_size;
+      }
+    }
+  }
+
   //////////////////////////////////////////////////////////////////////////////
 
   SummaryNode::SummaryNode(Ast *owner, const std::string &title)
@@ -177,36 +215,7 @@ namespace GitGud
       score -= 1.0;
     }
 
-    auto words = Tagger::getInstance().sentence2Vec(m_summary);
-    auto words_size = std::min(words.size(), static_cast<size_t>(12));
-    auto tags = Tagger::getInstance().tagSentence(words);
-    auto tags_size = std::min(tags.size(), static_cast<size_t>(12));
-
-    for (unsigned i=0; i<words_size; ++i)
-    {
-      auto word = words[i];
-      if (SpellChecker::getInstance().spellingError(word)) {
-        std::stringstream ss;
-        std::vector<std::string> spelling_suggestions = SpellChecker::getInstance().
-            spellingSuggestion(word);
-        if (spelling_suggestions.size() > 0)
-          ss << "\"" << words[i] << "\" - possible spelling error. Did you mean \"" <<
-             spelling_suggestions[0] << "\"?";
-        else
-          ss << "\"" << words[i] << "\" - possible spelling error.";
-        addSuggestion(1, ss.str());
-        score -= 1.0/words_size;
-      }
-
-      auto tag = tags[i];
-      if (tag.find("VBN") != std::string::npos || tag.find("VBD") != std::string::npos)
-      {
-        std::stringstream ss;
-        ss << "\"" << words[i] << "\" - consider using the present tense form.";
-        addSuggestion(1, ss.str());
-        score -= 1.0/tags_size;
-      }
-    }
+    checkSentence(score, m_summary, 1);
 
     return std::max(0.0, score);
   }
@@ -272,39 +281,7 @@ namespace GitGud
       score -= 0.1 * (m_line.length() - 72);
     }
 
-    auto words = Tagger::getInstance().sentence2Vec(m_line);
-    auto words_size = std::min(words.size(), static_cast<size_t>(12));
-    auto tags = Tagger::getInstance().tagSentence(words);
-    auto tags_size = std::min(tags.size(), static_cast<size_t>(12));
-
-    for (unsigned i=0; i<words_size; ++i)
-    {
-      auto word = words[i];
-      unsigned word_length = word.length();
-      if (word_length > 3 && word_length < 9) {
-        if (SpellChecker::getInstance().spellingError(word)) {
-          std::stringstream ss;
-          std::vector<std::string> spelling_suggestions = SpellChecker::getInstance().
-              spellingSuggestion(word);
-          if (spelling_suggestions.size() > 0)
-            ss << "\"" << words[i] << "\" - possible spelling error. Did you mean \"" <<
-               spelling_suggestions[0] << "\"?";
-          else
-            ss << "\"" << words[i] << "\" - possible spelling error.";
-          addSuggestion(m_line_number, ss.str());
-          score -= 1.0/words_size;
-        }
-      }
-
-      auto tag = tags[i];
-      if (tag.find("VBN") != std::string::npos || tag.find("VBD") != std::string::npos)
-      {
-        std::stringstream ss;
-        ss << "\"" << words[i] << "\" - consider using the present tense form.";
-        addSuggestion(m_line_number, ss.str());
-        score -= 1.0/tags_size;
-      }
-    }
+    checkSentence(score, m_line, m_line_number, true);
 
     return std::max(0.0, score);
   }
@@ -342,39 +319,7 @@ namespace GitGud
       score -= 0.1 * (m_point.length() - 72);
     }
 
-    auto words = Tagger::getInstance().sentence2Vec(m_point);
-    auto words_size = std::min(words.size(), static_cast<size_t>(12));
-    auto tags = Tagger::getInstance().tagSentence(words);
-    auto tags_size = std::min(tags.size(), static_cast<size_t>(12));
-
-    for (unsigned i=0; i<words_size; ++i)
-    {
-      auto word = words[i];
-      unsigned word_length = word.length();
-      if (word_length > 3 && word_length < 9) {
-        if (SpellChecker::getInstance().spellingError(word)) {
-          std::stringstream ss;
-          std::vector<std::string> spelling_suggestions = SpellChecker::getInstance().
-              spellingSuggestion(word);
-          if (spelling_suggestions.size() > 0)
-            ss << "\"" << words[i] << "\" - possible spelling error. Did you mean \"" <<
-               spelling_suggestions[0] << "\"?";
-          else
-            ss << "\"" << words[i] << "\" - possible spelling error.";
-          addSuggestion(m_line_number, ss.str());
-          score -= 1.0/words_size;
-        }
-      }
-
-      auto tag = tags[i];
-      if (tag.find("VBN") != std::string::npos || tag.find("VBD") != std::string::npos)
-      {
-        std::stringstream ss;
-        ss << "\"" << words[i] << "\" - consider using the present tense form.";
-        addSuggestion(m_line_number, ss.str());
-        score -= 1.0/tags_size;
-      }
-    }
+    checkSentence(score, m_point, m_line_number, true);
 
     return std::max(0.0, score);
   }

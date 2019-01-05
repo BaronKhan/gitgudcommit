@@ -28,7 +28,7 @@ namespace GitGud
 
     bool initPosTagger(const std::string &ngrams, const std::string &lexicon);
     std::vector<std::string> sentence2Vec(const std::string &sentence);
-    std::vector<std::string> tagSentence(std::vector<std::string> sentence);
+    std::vector<std::string> tagWords(std::vector<std::string> words);
     std::vector<std::string> tagSentence(const std::string &sentence);
   };
 

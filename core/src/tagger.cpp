@@ -62,15 +62,15 @@ namespace GitGud
 
   //////////////////////////////////////////////////////////////////////////////
 
-  std::vector<std::string> Tagger::tagSentence(std::vector<std::string> sentence)
+  std::vector<std::string> Tagger::tagWords(std::vector<std::string> words)
   {
     if (!m_initialised)
       return std::vector<std::string>();
 
-    sentence.emplace(sentence.begin(), "<START>");
-    sentence.emplace(sentence.begin(), "<START>");
-    sentence.emplace_back("<END>");
-    std::vector<std::string> tags = m_hmmTagger->tag(sentence);
+    words.emplace(words.begin(), "<START>");
+    words.emplace(words.begin(), "<START>");
+    words.emplace_back("<END>");
+    std::vector<std::string> tags = m_hmmTagger->tag(words);
     tags.erase(tags.begin());
     tags.erase(tags.begin());
     tags.pop_back();
@@ -85,7 +85,7 @@ namespace GitGud
     if (!m_initialised)
       return std::vector<std::string>();
 
-    return tagSentence(sentence2Vec(sentence));
+    return tagWords(sentence2Vec(sentence));
   }
 
   //////////////////////////////////////////////////////////////////////////////

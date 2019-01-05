@@ -58,6 +58,8 @@ namespace GitGud
     virtual NodeType getType() const = 0;
 
     void addSuggestion(unsigned line_number, const std::string & suggestion) const;
+    void checkSentence(double & score, const std::string & sentence,
+      unsigned line_number, bool limit_words=false) const;
 
     virtual ~MessageNode() {}
   };
