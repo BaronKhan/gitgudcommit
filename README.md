@@ -14,10 +14,10 @@ misspelling of the phrase "get good".
 In this Repository
 ---
 
-### Linux Command - `$ gitgudcommit`
+### Command Tool - `$ gitgudcommit`
 
-The `gitgudcommit` tool acts as a replacement for the `git commit` command, to
-help write better commit messages.
+The `gitgudcommit` command tool acts as a replacement for the `git commit`
+command, to help write better commit messages.
 
 ### Web App - [gitgudcommit.com](http://gitgudcommit.com/)
 
@@ -38,6 +38,7 @@ repositories by amazing people:
 * [fintechneo/libgit2](https://github.com/fintechneo/libgit2)
 * [danieldk/citar-cxx](https://github.com/danieldk/citar-cxx)
 * [hunspell/hunspell](https://github.com/hunspell/hunspell)
+* [chartjs/Chart.js](https://github.com/chartjs/Chart.js)
 
 Disclaimer
 ---
