@@ -170,6 +170,8 @@ namespace GitGud
       auto tag = tags[i];
       if (tag.find("VBN") != std::string::npos || tag.find("VBD") != std::string::npos)
       {
+        if (i > 0 && tags[i-1].find("BE") != std::string::npos)
+          continue;
         std::stringstream ss;
         ss << "\"" << words[i] << "\" - consider using the present tense form.";
         addSuggestion(line_number, ss.str());

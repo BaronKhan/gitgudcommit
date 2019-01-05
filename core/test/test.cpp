@@ -22,6 +22,18 @@ int main(int argc, char **argv)
   return RUN_ALL_TESTS();
 }
 
+template<class T>
+std::ostream& operator<<(std::ostream& os, const std::vector<T>& v) 
+{
+  os << "[";
+  for (typename std::vector<T>::const_iterator ii = v.begin(); ii != v.end(); ++ii)
+  {
+      os << " " << *ii;
+  }
+  os << "]";
+  return os;
+}
+
 TEST(SplitMessage, Lines)
 {
   const std::string test = "A title\n\nShould be 5 lines.\n\n- A bullet point";
@@ -58,6 +70,32 @@ TEST(PosTagger, VerbPresent)
   {
     std::vector<std::string> v = GitGud::Tagger::getInstance().tagSentence(test);
     EXPECT_TRUE(std::find(v.begin(), v.end(), "VB") != v.end());
+  }
+}
+
+TEST(PosTagger, CommitMessages)
+{
+  std::vector<std::string> tests {
+    "Updated file",
+    "Created message for parsing"
+    };
+  for (auto &test : tests)
+  {
+    GitGud::Commit commit("", "", test, 0);
+    EXPECT_GE(1, commit.getSuggestions().size());
+  }
+}
+
+TEST(PosTagger, IgnoreSpecialCases)
+{
+  std::vector<std::string> tests {
+    "Create the parsed message",
+    "Filter out messages that can't be parsed"  // BE before VBN
+    };
+  for (auto &test : tests)
+  {
+    GitGud::Commit commit("", "", test, 0);
+    EXPECT_EQ(0, commit.getSuggestions().size());
   }
 }
 

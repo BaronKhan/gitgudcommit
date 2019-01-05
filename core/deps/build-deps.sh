@@ -5,7 +5,7 @@ cd "$(dirname "$0")"
 
 echo "building citar-cxx"
 
-if [ -z "$(ls -A citar-cxx)" ] or [ -z "$(ls -A hunspell)" ]; then
+if [ -z "$(ls -A citar-cxx)" ] || [ -z "$(ls -A hunspell)" ]; then
   echo "initialising citar-cxx submodule"
   git submodule init
   echo "updating submodules"
@@ -19,21 +19,24 @@ echo "copying models"
 cp citar-cxx/models/brown/brown* ../models/.
 
 cd citar-cxx/build
-dos2unix build.sh
-echo "running build.sh in build"
-./build.sh
-echo "copying libcitar.a"
-cp libcitar.a ../../../lib/.
+if [ ! -f ../../../lib/libcitar.a ]; then
+  dos2unix build.sh
+  echo "running build.sh in build"
+  ./build.sh
+  echo "copying libcitar.a"
+  cp libcitar.a ../../../lib/.
+fi
 cd -
 
 cd citar-cxx/emscripten_hacks
-dos2unix build.sh
-echo "running build.sh in emscripten_hacks"
-./build.sh
-echo "copying libcitar_web.a"
-cp libcitar.a ../../../lib/libcitar_web.a
-echo "built libcitar_web.a with emscripten hacks and copied to core"
-
+if [ ! -f ../../../lib/libcitar_web.a ]; then
+  dos2unix build.sh
+  echo "running build.sh in emscripten_hacks"
+  ./build.sh
+  echo "copying libcitar_web.a"
+  cp libcitar.a ../../../lib/libcitar_web.a
+  echo "built libcitar_web.a with emscripten hacks and copied to core"
+fi
 echo "done building citar-cxx"
 
 cd ../../hunspell
