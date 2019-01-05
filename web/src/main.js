@@ -102,9 +102,9 @@ gitworker.addEventListener('message', function(e) {
     } else if (e.data.hasOwnProperty("___TOOBIG___")) {
       if (!reloading) {
         reloading = true;
-        var estimated_size = Math.round(e.data.___TOOBIG___/31);
-        alert("The repository is too big (~"+estimated_size+
-          "MB). The maximum size is 150MB Please use the 'Upload ZIP' feature.");
+        // var estimated_size = Math.round(e.data.___TOOBIG___/31);
+        alert("The repository is too big to clone. \
+          The maximum size is 150MB. Please use the 'Upload ZIP' feature.");
       }
       window.location.reload();
     }
@@ -191,7 +191,7 @@ function analyseCommits() {
   var numCommits = commits.length;
   if (numCommits > limit) {
     console.warn("Truncating number of commits from "+numCommits+" to "+limit);
-    createWarningAlert("There are too many commits to analyse. Some will be skipped.");
+    createWarningAlert("There are too many commits to analyse. Some commits will be skipped.");
     setTimeout(function() { removeWarningAlert(); }, 10000);
     realCommitCount = numCommits;
     commits = commits.slice(0, limit);
@@ -365,7 +365,7 @@ function populatePanel() {
       $("#repoComment").html("<p>A well-maintained repository with adequate commit messages.</p>")
       break;
     case 4:
-      $("#repoComment").html("<p>A high quality repostory with well-written commit messages.</p>")
+      $("#repoComment").html("<p>A high quality repository with well-written commit messages.</p>")
       break;
     case 5:
       $("#repoComment").html("<p>A near-perfect repository with excellent commit messages.</p>")

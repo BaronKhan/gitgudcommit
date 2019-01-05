@@ -39,12 +39,13 @@ namespace GitGud
       {
         MessageNode *new_node;
         auto line = lines[i];
+        unsigned line_number = i+1;
         if (line.compare("") == 0)
-          new_node = new BlankNode(this, i);
+          new_node = new BlankNode(this, line_number);
         else if (std::find(line.begin(), line.end(), '-') != line.end()) //TODO: ignore hyphens in words
-          new_node = new PointNode(this, i, line);
+          new_node = new PointNode(this, line_number, line);
         else
-          new_node = new BodyNode(this, i, line);
+          new_node = new BodyNode(this, line_number, line);
         m_nodes.push_back(new_node);
       }
     }
@@ -290,7 +291,7 @@ namespace GitGud
                spelling_suggestions[0] << "\"?";
           else
             ss << "\"" << words[i] << "\" - possible spelling error.";
-          addSuggestion(i+1, ss.str());
+          addSuggestion(m_line_number, ss.str());
           score -= 1.0/words_size;
         }
       }
@@ -300,7 +301,7 @@ namespace GitGud
       {
         std::stringstream ss;
         ss << "\"" << words[i] << "\" - consider using the present tense form.";
-        addSuggestion(i+1, ss.str());
+        addSuggestion(m_line_number, ss.str());
         score -= 1.0/tags_size;
       }
     }
@@ -360,7 +361,7 @@ namespace GitGud
                spelling_suggestions[0] << "\"?";
           else
             ss << "\"" << words[i] << "\" - possible spelling error.";
-          addSuggestion(i+1, ss.str());
+          addSuggestion(m_line_number, ss.str());
           score -= 1.0/words_size;
         }
       }
@@ -370,7 +371,7 @@ namespace GitGud
       {
         std::stringstream ss;
         ss << "\"" << words[i] << "\" - consider using the present tense form.";
-        addSuggestion(i+1, ss.str());
+        addSuggestion(m_line_number, ss.str());
         score -= 1.0/tags_size;
       }
     }

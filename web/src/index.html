@@ -51,9 +51,9 @@
           <h3>SUMMARY</h3>
           <p id="repoRating">This repository has a rating of</p>
           <div class="rating" id="repoStars">
-            <span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>&#x2605;</span>
+            <span>&#x2605;</span><span>&#x2605;</span><span>&#x2605;</span><span>&#x2605;</span><span>&#x2605;</span>
           </div>
-          <p id="repoComment">A very good repo.</p>
+          <p id="repoComment"></p>
         </div>
         <div id="commits" class="tab-pane fade">
           <h3 class="text-center">COMMITS</h3>
@@ -72,71 +72,11 @@
               <h3 id="commitCount">303 Commits Found</h3>
               <table class="table" id="commitTable">
                 <thead id="tableHeadData">
-                  <tr>
-                    <th>Author</th>
-                    <th>Date</th>
-                    <th>Message</th>
-                    <th>Rating</th>
-                    <th>Suggestions</th>
-                  </tr>
+                
                 </thead>
 
                 <tbody id="tableBodyData">
-                <tr>
-                  <td>HTML</td>
-                  <td>01/01/19 00:00</td>
-                  <td>Web Develpment</td>
-                  <td>5 stars</td>
-                  <td>
-                    <ul>
-                      <li>This commit is longer than 72 characters.</li>
-                      <li>"Web" - consider using the present tense form.</li>
-                      <li>"Develpment" - possible spelling error.</li>
-                    </ul>
-                  </td>
-                </tr>
-                <tr>
-                  <td>PHP</td>
-                  <td>01/01/19 00:00</td>
-                  <td>Web Development</td>
-                  <td>5 stars</td>
-                </tr>
-                <tr>
-                  <td>C#</td>
-                  <td>01/01/19 00:00</td>
-                  <td>Programming Language</td>
-                  <td>5 stars</td>
-                </tr>
-                <tr>
-                  <td>JavaScript</td>
-                  <td>01/01/19 00:00</td>
-                  <td>Web Development</td>
-                  <td>5 stars</td>
-                </tr>
-                <tr>
-                  <td>Bootstrap</td>
-                  <td>01/01/19 00:00</td>
-                  <td>Web Design</td>
-                  <td>5 stars</td>
-                </tr>
-                <tr>
-                  <td>Python</td>
-                  <td>01/01/19 00:00</td>
-                  <td>Programming Language</td>
-                  <td>5 stars</td>
-                </tr>
-                <tr>
-                  <td>Android</td>
-                  <td>01/01/19 00:00</td>
-                  <td>App Development</td>
-                  <td>5 stars</td>
-                </tr>
-                <tr>
-                  <td>Angular JS</td>
-                  <td>01/01/19 00:00</td>
-                  <td>Web Delopment</td>
-                  <td>5 stars</td>
-                </tr>
+                
                 </tbody>
               </table>
             </div>
@@ -152,8 +92,9 @@
             <h4>What is this?</h4>
             <p>This website is part of the "Git Gud Commit" project - a suite of tools for improving
             the quality of Git repositories. Using this website, you
-            will be able to determine the quality of commit messages in a public
-            Git repository.</p>
+            will be able to determine the quality of commit messages in a
+            Git repository. The phrase, "Git Gud" originates from an Internet meme
+            as an intentional misspelling of the phrase "get good".</p>
             <h4>How do you know if a commit message is 'good'?</h4>
             <p>Linus Torvalds, the creator of the Linux kernel and Git, has outlined
               what makes a good commit message <a target="_blank"
@@ -165,13 +106,16 @@
               analysed to determine whether they abide to these rules, and a score
               is assigned to the commit using a simple algorithm.</p>
             <h4>Who cares?</h4>
-            <p>Writing good commit messages is not good practice, it can be considered
+            <p>Writing good commit messages is not only good practice, it can be considered
             essential for large-scale projects. If a user is searching for a commit
-            which something critical, the message, "yayy, it works! (i think)" is
-            not going to help them determine which commit could have broken the project.</p>
-            <p>While commands such as "git blame" may make this easier,
-            it doesn't help when you need to search through the log history to find
-            the cause of an issue.</p>
+            which has broken something critical, the message, "yayy, it works! (i think)" is
+            not going to help them determine whether that commit could have caused the issue.
+            While commands such as "git blame" may make this easier,
+            they do not help in cases where you are not sure which source files
+            should be inspected.</p>
+            <p>While you shouldn't expect to write essays for each commit you make, a reasonable
+            level of detail should be given, so the changes can be determined from just
+            the message.</p>
             <h4>Is this website stealing my data?</h4>
             <p>Repositories are cloned/stored locally and <b>are never accessed by,
              or stored on, any server</b>.</p>
@@ -186,7 +130,7 @@
             <p>Check out the GitHub repository of this project <a target="_blank"
               href="https://github.com/BaronKhan/gitgudcommit">here</a> for more information.
             Feel free to analyse the repostitory with this tool if you want :)</p>
-            <br><br>
+            <br>
             <center><small>Git Gud Commit is maintained by Baron Khan
             and licensed under the MIT License.</small></center>
           </div>

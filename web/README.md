@@ -9,7 +9,7 @@ installed, such that you are able to run the `emcc` and `em++` commands.
 ```
 $ sudo apt-get update
 $ sudo apt-get install libgit2-dev dos2unix nodejs cmake
-$ ./deps/build_deps.sh
+$ ./build.sh
 ```
 
 ### Usage
