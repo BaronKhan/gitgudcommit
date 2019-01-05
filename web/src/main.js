@@ -366,13 +366,13 @@ function populatePanel() {
   $("#repoStars").html(rating);
   switch (rating_val) {
     case 1:
-      $("#repoComment").html("<p>A poorly maintained repository with weak commit messages.</p>")
+      $("#repoComment").html("<p>A poorly maintained repository with weak commit messages.</p><small>Want to write better commits? Check out the <a target=\"_blank\" href=\"https://github.com/BaronKhan/gitgudcommit\">Git Gud Commit command tool</a>.</small>")
       break;
     case 2:
-      $("#repoComment").html("<p>A weak repository with below-average commit messages.</p>")
+      $("#repoComment").html("<p>A weak repository with below-average commit messages.</p><small>Want to write better commits? Check out the <a target=\"_blank\" href=\"https://github.com/BaronKhan/gitgudcommit\">Git Gud Commit command tool</a>.</small>")
       break;
     case 3:
-      $("#repoComment").html("<p>A well-maintained repository with adequate commit messages.</p>")
+      $("#repoComment").html("<p>A well-maintained repository with adequate commit messages.</p><small>Want to write better commits? Check out the <a target=\"_blank\" href=\"https://github.com/BaronKhan/gitgudcommit\">Git Gud Commit command tool</a>.</small>")
       break;
     case 4:
       $("#repoComment").html("<p>A high quality repository with well-written commit messages.</p>")
