@@ -42,7 +42,7 @@
           <span>Upload ZIP</span>
           <input type="file" class="upload" id="uploadZip"/>
         </div>
-        <button id="gitGudButton" class="btn btn-primary" onclick="analyseUrl()">Git Gud</button>
+        <button id="gitGudButton" class="btn btn-primary" onclick="analyseUrl()" disabled="">Git Gud</button>
       </div>
 
       <div class="progress" id="cloneProgress" style="display:none">
@@ -106,9 +106,9 @@
           <canvas id="scoreChart" height="85%"></canvas>
         </div>
         <div id="faq" class="tab-pane fade">
-          <div class="col-md-7 col-centered">
+          <div class="col-md-7 col-centered" align="justify">
             <h3 class="text-center">FAQ</h3>
-            <h4>What is this?</h4>
+            <h4>What is this website?</h4>
             <p>This website is part of the "Git Gud Commit" project - a suite of tools for improving
             the quality of Git repositories. Using this website, you
             will be able to determine the quality of commit messages in a
@@ -124,7 +124,7 @@
               Using natural language processing techniques, commit messages are
               analysed to determine whether they abide to these rules, and a score
               is assigned to the commit using a simple algorithm.</p>
-            <h4>Who cares?</h4>
+            <h4>Why should I care about my commit messages?</h4>
             <p>Writing good commit messages is not only good practice, it can be considered
             essential for large-scale projects. If a user is searching for a commit
             which has broken something critical, the message, "yayy, it works! (i think)" is

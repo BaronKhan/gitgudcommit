@@ -11,6 +11,7 @@ Module['onRuntimeInitialized'] = () => {
   FS.chdir("/"+dir);
   console.log('libgit2 ready in webworker.',(new Date().getTime() - startTime),'ms startup time');
   jsgitinit();
+  self.postMessage("___READY___");
   started = true;
 };
 

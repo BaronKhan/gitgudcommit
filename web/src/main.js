@@ -26,6 +26,8 @@ var files = [];
 
 var reloading = false;
 
+document.getElementById("gitGudButton").disabled = true;
+
 resizeUrlBox();
 
 coreworker.addEventListener('message', function(e) {
@@ -119,6 +121,8 @@ gitworker.addEventListener('message', function(e) {
   } else if (e.data == "___OPENED___" && getCommits) {
     walkCommits();
     getCommits = false;
+  } else if (e.data == "___READY___") {
+    document.getElementById("gitGudButton").disabled = false;
   }
   console.log(e.data);
 }, false);
