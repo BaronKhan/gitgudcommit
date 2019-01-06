@@ -240,10 +240,13 @@ namespace GitGud
 
     double score = 5.0;
 
-    if (m_summary.length() > 50)
+    auto length = m_summary.length();
+    if (length > 50)
     {
-      addSuggestion(1, "Length of summary is greater than 50 characters.");
-      score -= 1.9 + (0.1 * (m_summary.length() - 50));
+      std::stringstream ss;
+      ss << "Length of summary is greater than 50 characters (" << length << ").";
+      addSuggestion(1, ss.str());
+      score -= 1.9 + (0.1 * (length - 50));
     }
 
     if (!(isupper(m_summary[0]) || m_summary[0] == '['))
@@ -326,10 +329,13 @@ namespace GitGud
   {
     double score = 5.0;
 
-    if (m_line.length() > 72)
+    auto length = m_line.length();
+    if (length > 72)
     {
-      addSuggestion(m_line_number, "Length of line is greater than 72 characters.");
-      score -= 0.1 * (m_line.length() - 72);
+      std::stringstream ss;
+      ss << "Length of line is greater than 72 characters (" << length << ").";
+      addSuggestion(m_line_number, ss.str());
+      score -= 0.1 * (length - 72);
     }
 
     checkSentence(score, m_line, m_line_number, true);
@@ -364,10 +370,13 @@ namespace GitGud
   {
     double score = 5.0;
 
-    if (m_point.length() > 72)
+    auto length = m_point.length();
+    if (length > 72)
     {
-      addSuggestion(m_line_number, "Length of bullet point is greater than 72 characters.");
-      score -= 0.1 * (m_point.length() - 72);
+      std::stringstream ss;
+      ss << "Length of bullet point is greater than 72 characters (" << length << ").";
+      addSuggestion(m_line_number, ss.str());
+      score -= 0.1 * (length - 72);
     }
 
     checkSentence(score, m_point, m_line_number, true);
