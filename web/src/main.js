@@ -391,7 +391,7 @@ function populatePanel() {
       $("#repoComment").html("<p>A well-maintained repository with adequate commit messages.</p><small>Want to write better commits? Check out the <a target=\"_blank\" href=\"https://github.com/BaronKhan/gitgudcommit\">Git Gud Commit command tool</a>.</small>")
       break;
     case 4:
-      $("#repoComment").html("<p>A high quality repository with well-written commit messages.</p>")
+      $("#repoComment").html("<p>A high quality repository with well-written commit messages.</p><small>Want to write better commits? Check out the <a target=\"_blank\" href=\"https://github.com/BaronKhan/gitgudcommit\">Git Gud Commit command tool</a>.</small>")
       break;
     case 5:
       $("#repoComment").html("<p>A near-perfect repository with excellent commit messages.</p>")
