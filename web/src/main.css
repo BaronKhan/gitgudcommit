@@ -17,6 +17,21 @@ body {
   width: 100%;
 }
 
+#summary::-webkit-scrollbar {
+  width: 0px;
+  background: transparent; /* make scrollbar transparent */
+}
+
+#timeline::-webkit-scrollbar {
+  width: 0px;
+  background: transparent; /* make scrollbar transparent */
+}
+
+#faq::-webkit-scrollbar {
+  width: 0px;
+  background: transparent; /* make scrollbar transparent */
+}
+
 .col-centered{
   float: none;
   margin: 0 auto;
