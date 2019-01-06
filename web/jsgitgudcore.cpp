@@ -26,9 +26,21 @@ void jsInitSpellChecker()
   );
 }
 
+void jsAddFilename(const std::string & filename)
+{
+  GitGud::Commit::addFilename(filename);
+}
+
+void jsResetFilenames()
+{
+  GitGud::Commit::resetFilenames();
+}
+
 EMSCRIPTEN_BINDINGS(my_module) {
   function("jsInitPosTagger", &jsInitPosTagger);
   function("jsInitSpellChecker", &jsInitSpellChecker);
+  function("jsAddFilename", &jsAddFilename);
+  function("jsResetFilenames", &jsResetFilenames);
   register_vector<std::string>("vector<string>");
   register_vector<unsigned>("vector<unsigned>");
 

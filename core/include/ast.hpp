@@ -30,6 +30,8 @@ namespace GitGud
     void calculateCommitScore();
 
   public:
+    static void addFilename(const std::string & filename);
+    static void resetFilenames();
     static std::vector<std::string> split(const std::string &s, char delim);
 
     Ast(const std::string &message);
@@ -58,6 +60,7 @@ namespace GitGud
     virtual NodeType getType() const = 0;
 
     void addSuggestion(unsigned line_number, const std::string & suggestion) const;
+    bool wordIsFilename(const std::string & word) const;
     void checkSentence(double & score, const std::string & sentence,
       unsigned line_number, bool limit_words=false) const;
 

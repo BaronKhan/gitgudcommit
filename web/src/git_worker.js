@@ -82,8 +82,14 @@ self.addEventListener('message', function(e) {
         if (subdirs[i] == "")
           continue;
         var old_dir = current_dir;
-        try { FS.mkdir('/workdir/'+old_dir+'/'+subdirs[i]); }
-        catch(e) { /*console.log("Error while creating folder '"+subdirs[i]+"': "+e.message);*/ }
+        try {
+          FS.mkdir('/workdir/'+old_dir+'/'+subdirs[i]);
+          if (subdirs[i].length > 2)
+            self.postMessage({'folder_processed': subdirs[i] })
+        }
+        catch(e) {
+          // console.log("Error while creating folder '"+subdirs[i]+"': "+e.message);
+        }
         current_dir += "/"+subdirs[i];
       }
       break;

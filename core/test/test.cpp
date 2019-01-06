@@ -142,6 +142,20 @@ TEST(Scoring, BlankLineSuggestion)
   FAIL();
 }
 
+TEST(Summary, Filename)
+{
+  GitGud::Commit::addFilename("file.cpp");
+  GitGud::Commit commit("", "", "file.cpp: update text", 0);
+  EXPECT_EQ(0, commit.getSuggestions().size());
+}
+
+TEST(Filenames, IgnoreSpelling)
+{
+  GitGud::Commit::addFilename("libgit2");
+  GitGud::Commit commit("", "", "Update libgit2", 0);
+  EXPECT_EQ(0, commit.getSuggestions().size());
+}
+
 TEST(Processing, Timing)
 {
   const clock_t begin_time = clock();

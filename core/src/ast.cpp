@@ -1,12 +1,29 @@
 #include <sstream>
 #include <algorithm>
 #include <cctype>
+#include <map>
 #include "ast.hpp"
 #include "tagger.hpp"
 #include "spell.hpp"
 
 namespace GitGud
 {
+
+  static std::map<std::string, int> s_filenames;
+
+  void Ast::addFilename(const std::string & filename)
+  {
+    s_filenames[filename] = 1;
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  void Ast::resetFilenames()
+  {
+    s_filenames.clear();
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
 
   std::vector<std::string> Ast::split(const std::string &s, char delim)
   {
@@ -140,6 +157,15 @@ namespace GitGud
       m_owner->addSuggestion(line_number, suggestion);
   }
 
+  //////////////////////////////////////////////////////////////////////////////
+
+  bool MessageNode::wordIsFilename(const std::string & word) const
+  {
+    return (s_filenames.find(word) != s_filenames.end());
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
   void MessageNode::checkSentence(double & score, const std::string & sentence,
     unsigned line_number, bool limit_words) const
   {
@@ -152,7 +178,7 @@ namespace GitGud
     {
       auto word = words[i];
       unsigned word_length = word.length();
-      if (!limit_words || (word_length > 3 && word_length < 9)) {
+      if (!wordIsFilename(word) && (!limit_words || (word_length > 3 && word_length < 9))) {
         if (SpellChecker::getInstance().spellingError(word)) {
           std::stringstream ss;
           std::vector<std::string> spelling_suggestions = SpellChecker::getInstance().
@@ -220,10 +246,24 @@ namespace GitGud
       score -= 1.9 + (0.1 * (m_summary.length() - 50));
     }
 
-    if (!(isupper(m_summary[0]) || m_summary[0] == '['))  // TODO: OR if begins with a file name
+    if (!(isupper(m_summary[0]) || m_summary[0] == '['))
     {
-      addSuggestion(1, "Summary should begin with a capital letter or filename.");
-      score -= 1.0;
+      bool is_filename = false;
+      std::map<std::string, int>::const_iterator it;
+      for (it = s_filenames.begin(); it != s_filenames.end(); ++it)
+      {
+        auto f = it->first;
+        if (m_summary.length() > f.length() && m_summary.compare(0, f.length(), f) == 0)
+        {
+          is_filename = true;
+          break;
+        }
+      }
+      if (!is_filename)
+      {
+        addSuggestion(1, "Summary should begin with a capital letter or filename.");
+        score -= 1.0;
+      }
     }
 
     checkSentence(score, m_summary, 1);

@@ -14,8 +14,14 @@ self.addEventListener('message', function(e) {
   if (!started) { return; }
   var data = e.data;
   switch (data.cmd) {
+    case "reset":
+      Module.jsResetFilenames();
+      break;
     case "files":
       files = data.files;
+      for (var i=0; i<files.length; i++) {
+        Module.jsAddFilename(files[i]);
+      }
       break;
     case "analyse":
       var commit = data.commit;

@@ -71,4 +71,18 @@ namespace GitGud
     return m_ast->getSuggestionsFull();
   }
 
+  //////////////////////////////////////////////////////////////////////////////
+
+  void Commit::addFilename(const std::string & filename)
+  {
+    Ast::addFilename(filename);
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  void Commit::resetFilenames()
+  {
+    Ast::resetFilenames();
+  }
+
 }

@@ -94,6 +94,9 @@ gitworker.addEventListener('message', function(e) {
         })
       }
       return;
+    } else if (e.data.hasOwnProperty('folder_processed')) {
+      files.push(e.data.folder_processed);
+      return;
     } else if (e.data.hasOwnProperty("___ERROR___")) {
       removeFailureAlert();
       removeSuccessAlert();
@@ -156,6 +159,7 @@ function initCommitAnalysis() {
   fileCount = 0;
   repoName = "";
   files = [];
+  coreworker.postMessage({ 'cmd': 'reset' })
   realCommitCount = -1;
   setProgressBar();
   removeSuccessAlert();
@@ -209,6 +213,7 @@ function analyseCommits() {
   numCommits = commits.length;
   console.log("Total commits: "+numCommits);
   analysisProgress = 25;
+  console.log("Filenames = "+files);
   coreworker.postMessage({ 'cmd': 'files', 'files': files })
   for (i=0; i<numCommits; i++) {
     var commit = commits[i];
