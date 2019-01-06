@@ -58,16 +58,16 @@
 
     </div>
 
-    <div id="panelAnalysis" class="panel panel-default" style="display:none">
+    <div id="panelAnalysis" class="panel panel-default">
       <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#summary">Summary</a></li>
-        <li><a data-toggle="tab" href="#commits">Commits</a></li>
-        <li><a data-toggle="tab" href="#timeline">Timeline</a></li>
-        <li><a data-toggle="tab" href="#faq">FAQ</a></li>
+        <li id="tabSummary" style="display: none;"><a data-toggle="tab" href="#summary">Summary</a></li>
+        <li id="tabCommits" style="display: none;"><a data-toggle="tab" href="#commits">Commits</a></li>
+        <li id="tabTimeline" style="display: none;"><a data-toggle="tab" href="#timeline">Timeline</a></li>
+        <li id="tabFAQ"><a data-toggle="tab" href="#faq">FAQ</a></li>
       </ul>
 
       <div class="tab-content">
-        <div id="summary" class="tab-pane fade in active text-center">
+        <div id="summary" class="tab-pane fade in text-center">
           <h3>SUMMARY</h3>
           <p id="repoRating">This repository has a rating of</p>
           <div class="rating" id="repoStars">

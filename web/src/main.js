@@ -281,6 +281,17 @@ function setProgressBar() {
     setTimeout(function(){
       block.style.display = "none";
       loading.style.display = "none";
+      $("#tabSummary").attr('class', 'active');
+      $("#tabSummary").show();
+      $("#tabCommits").show();
+      $("#tabTimeline").show();
+      $("#tabCommits").removeClass();
+      $("#tabTimeline").removeClass();
+      $("#tabFAQ").removeClass();
+      $("#summary").attr('class', 'tab-pane fade in active text-center');
+      $("#commits").attr('class', 'tab-pane fade');
+      $("#timeline").attr('class', 'tab-pane fade');
+      $("#faq").attr('class', 'tab-pane fade');
       $("#panelAnalysis").fadeIn();
       removeWarningAlert();
       createSuccessAlert("The Git repository has been analysed.");
