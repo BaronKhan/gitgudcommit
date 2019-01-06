@@ -14,11 +14,18 @@ const mimeTypes = {
   "jpg": "image/jpeg",
   "png": "image/png",
   "gif": "image/gif",
-  "wasm": "application/wasm"
+  "ico": "image/x-icon",
+  "svg": "image/svg+xml",
+  "wasm": "application/wasm",
+  "xml": "application/xml",
+  "eot": "application/vnd.ms-fontobject",
+  "ttf": "application/x-font-ttf",
+  "woff": "application/x-font-woff",
+  "woff2": "application/x-font-woff"
 };
 
 // Maximum 10 requests every minute; else activate circuit breaker
-const requestLimit = 10*50;
+const requestLimit = 10*56;
 const requestBreakTime = 60*1000;
 
 var requestCount = 0;
@@ -63,6 +70,10 @@ function onRequest(request, response) {
         path = 'index.html';
       }
 
+      if (path.includes("?")) {
+        path = path.substring(0, path.indexOf('?'));
+      }
+
       var mimeType = mimeTypes[path.split('.').pop()];
       
       if (!mimeType) {
@@ -72,7 +83,10 @@ function onRequest(request, response) {
       response.writeHead(200, { "Content-Type": mimeType });
 
       if(fs.existsSync(path)) {
-        response.end(fs.readFileSync(path));
+        if (mimeType.includes("x-font"))
+          response.end(fs.readFileSync(path), "binary");
+        else
+          response.end(fs.readFileSync(path));
       } else {
         response.statusCode = 404;
         response.end('');

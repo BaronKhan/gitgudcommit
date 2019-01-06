@@ -398,6 +398,12 @@ function populatePanel() {
       break;
   }
 
+  var urlInput = document.getElementById("urlInput").value;
+  if (urlInput.includes("http"))
+    $("#twitterLink").attr("href", "http://twitter.com/share?text=My Git repository at "+urlInput+" has a rating of "+averageScore+" out of 5. Check out the quality of your own Git repositories at&url=http://gitgudcommit.com&hashtags=GitGud")
+  else
+    $("#twitterLink").attr("href", "http://twitter.com/share?text=My '"+urlInput+"' Git repository has a rating of "+averageScore+" out of 5. Check out the quality of your own Git repositories at&url=http://gitgudcommit.com&hashtags=GitGud")
+
   if (realCommitCount != -1)
     $("#commitCount").html(commits.length+" Commits Found (out of "+realCommitCount+")");
   else
