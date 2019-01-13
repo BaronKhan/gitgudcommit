@@ -33,9 +33,22 @@ var requestCount = 0;
 var cloneRequests = 0;
 
 function onRequest(request, response) {
-  let path = request.url.substring(1);
+  let path = escape(request.url.substring(1));
 
-  if (requestCount > requestLimit) {
+  var valid = true;
+  if (path.includes(";"))
+    valid = false;
+  if (path.includes("chmod"))
+    valid = false;
+  if (path.includes("wget"))
+    valid = false;
+
+  if (!valid) {
+    response.statusCode = 404;
+    response.end('');
+    console.log(path+" is not valid");
+  }
+  else if (!requestCount > requestLimit) {
     response.statusCode = 503;
     response.end('');
     console.log("Circuit breaker is active. Ignoring request for "+request.url);
