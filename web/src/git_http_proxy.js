@@ -5,6 +5,7 @@
 const http = require('http');
 const https = require('https');
 const fs = require('fs');
+const qs = require('querystring');
 
 const mimeTypes = {
   "html": "text/html",
@@ -33,7 +34,7 @@ var requestCount = 0;
 var cloneRequests = 0;
 
 function onRequest(request, response) {
-  let path = escape(request.url.substring(1));
+  let path = request.url.substring(1);
 
   var valid = true;
   if (path.includes(";"))
@@ -55,6 +56,8 @@ function onRequest(request, response) {
   } else {
 
     if(path.indexOf('/') > -1) {
+      path = qs.escape(escape(path));
+
       const options = {
         hostname: 'github.com',
         port: 443,
