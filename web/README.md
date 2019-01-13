@@ -1,4 +1,4 @@
-Web Tool
+[gitgudcommit.com](http://gitgudcommit.com/)
 ===
 
 ### Dependencies

@@ -7,17 +7,8 @@ Architecture Overview
 # Repo Manager
 * Handles the repository
 * Holds a reference/pointer to the Git repository
-* Contains a Commit Manager, Log Manager and Training Manager
-
-## Commit Manager
-* Handles the creation/editing of a new commit message
-* Acts as a replacement for the `git commit` command
-* Accesses the Git message handler and edits it before committing
-* Calculates the score of the commit message and notifies user
-
-### Commit
-* A Commit instance is a single Git commit
-* Contains all the metadata of the commit (message, author, timestamp, etc)
+* Checks if Git is installed in constructor!
+* Contains a Log Manager or Training Manager
 
 ## Log Manager
 * Outputs the scores of all commits in the repository

@@ -1,0 +1,1 @@
+simple avarage and standard diviation testing scripts

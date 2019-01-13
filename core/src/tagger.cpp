@@ -47,7 +47,7 @@ namespace GitGud
       m_hmmTagger = new HMMTagger(model, knownWordHandler, smoothing);
     }
 
-    std::cout << "Initialised POS tagger" << std::endl;
+    // std::cout << "Initialised POS tagger" << std::endl;
 
     m_initialised = true;
     return true;

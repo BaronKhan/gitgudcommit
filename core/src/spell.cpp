@@ -13,7 +13,7 @@ namespace GitGud
 
     m_spell = new Hunspell(aff.c_str(), dic.c_str());
 
-    std::cout << "Initialised spell checker" << std::endl;
+    // std::cout << "Initialised spell checker" << std::endl;
 
     m_initialised = true;
     return true;

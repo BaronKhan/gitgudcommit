@@ -1,4 +1,4 @@
-Test Harness
+Core Test Harness
 ===
 
 ### Dependencies

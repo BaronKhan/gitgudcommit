@@ -8,23 +8,27 @@ https://xkcd.com/1296/
 
 Git Gud Commit is a suite of tools for improving the quality of Git repositories.
 
-The phrase "git gud" originates from an Internet meme as an intentional
-misspelling of the phrase "get good".
-
 In this Repository
 ---
 
-### Command Tool - `$ gitgudcommit`
+### [Git Hook](https://github.com/BaronKhan/gitgudcommit/tree/master/hook) for `$ git commit`
 
-The `gitgudcommit` command tool acts as a replacement for the `git commit`
-command, to help write better commit messages.
+Install this Git hook to add checks to your commit messages whenever you make a
+commit. The hook will suggest changes to improve the clarity and structure of
+your commit message before committing, giving you time to fix any spelling errors,
+overflowing lines, and more.
 
-### Web App - [gitgudcommit.com](http://gitgudcommit.com/)
+### [gitgudcommit.com](http://gitgudcommit.com/) - Web App
 
 [gitgudcommit.com](http://gitgudcommit.com/) is a web application that allows a
 user to determine the quality of commit messages in a Git repository.
 
-### Test Harness
+### [Command Tool](https://github.com/BaronKhan/gitgudcommit/tree/master/linux) - `$ gitgudcommit`
+
+The `gitgudcommit` command tool allows a user to manage the quality of their
+Git repositories. (work-in-progress)
+
+### [Core Test](https://github.com/BaronKhan/gitgudcommit/tree/master/core) Harness
 
 Tests the core functionality of the natural language processing algorithms and
 tools applied to commit messages in order to calculate an overall score.
@@ -45,3 +49,6 @@ Disclaimer
 
 Git Gud Commit is not affiliated with Git, GitHub or GitLab. Git Gud Commit is maintained
 by [Baron Khan](https://github.com/BaronKhan) and is licensed under the MIT License.
+
+The phrase "git gud" originates from an Internet meme as an intentional
+misspelling of the phrase "get good".

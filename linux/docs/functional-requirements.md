@@ -13,3 +13,4 @@ Extension
 
 - Read a JSON file containing a mapping of keywords to files
 - Train a list of keywords mapping to files and store in a JSON file
+- Save this mapping to ~/.gitgudcommit and use it in the commit client hook.
