@@ -8,6 +8,7 @@ Module['onRuntimeInitialized'] = () => {
   Module.jsInitPosTagger();
   Module.jsInitSpellChecker();
   started = true;
+  self.postMessage("___READY___")
 };
 
 self.addEventListener('message', function(e) {

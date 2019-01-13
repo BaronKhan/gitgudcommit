@@ -26,38 +26,47 @@ var files = [];
 
 var reloading = false;
 
+var gitReady = false;
+var coreReady = false;
+
 document.getElementById("gitGudButton").disabled = true;
 
 resizeUrlBox();
 
 coreworker.addEventListener('message', function(e) {
   var data = e.data;
-  switch (data.type) {
-    case "score":
-      scores.push(data.data);
-      break;
-    case "suggestions":
-      suggestions.push(data.data);
-      break;
-  }
-  var scores_length = scores.length;
-  analysisProgress = 25 + Math.ceil(((scores_length)*75.0)/commits.length);
-  setProgressBar();
-  // Calculate current average and cummulative average
-  if (commits.length == scores_length && commits.length == suggestions.length) {
-    console.log("All commits have been analysed");
-
-    var sum = 0.0;
-    var j = 0;
-    for (var i = scores_length-1; i >= 0; i-=Math.floor(scores_length/100)+1) {
-      sum += parseInt( scores[i], 10 );
-      j++;
-      averageScore = Math.round((sum/j) * 100) / 100;
-      cummulativeAverage.push(averageScore);
+  if (typeof data === 'object') {
+    switch (data.type) {
+      case "score":
+        scores.push(data.data);
+        break;
+      case "suggestions":
+        suggestions.push(data.data);
+        break;
     }
-    populatePanel();
-    updateScoreChart();
-    analysisInProgress = false;
+    var scores_length = scores.length;
+    analysisProgress = 25 + Math.ceil(((scores_length)*75.0)/commits.length);
+    setProgressBar();
+    // Calculate current average and cummulative average
+    if (commits.length == scores_length && commits.length == suggestions.length) {
+      console.log("All commits have been analysed");
+
+      var sum = 0.0;
+      var j = 0;
+      for (var i = scores_length-1; i >= 0; i-=Math.floor(scores_length/100)+1) {
+        sum += parseInt( scores[i], 10 );
+        j++;
+        averageScore = Math.round((sum/j) * 100) / 100;
+        cummulativeAverage.push(averageScore);
+      }
+      populatePanel();
+      updateScoreChart();
+      analysisInProgress = false;
+    }
+  } else if (data == "___READY___") {
+    coreReady = true;
+    if (gitReady && coreReady)
+      document.getElementById("gitGudButton").disabled = false;
   }
 }, false);
 
@@ -131,7 +140,9 @@ gitworker.addEventListener('message', function(e) {
     walkCommits();
     getCommits = false;
   } else if (e.data == "___READY___") {
-    document.getElementById("gitGudButton").disabled = false;
+    gitReady = true;
+    if (gitReady && coreReady)
+      document.getElementById("gitGudButton").disabled = false;
   }
   console.log(e.data);
 }, false);
