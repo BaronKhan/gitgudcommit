@@ -127,7 +127,19 @@ TEST(SpellChecker, ErrorCount)
 TEST(Summary, Suggestions)
 {
   GitGud::Commit commit("", "", "added a bad sumary", 0);
-  EXPECT_GE(3, commit.getSuggestions().size());
+  EXPECT_EQ(3, commit.getSuggestions().size());
+}
+
+TEST(Summary, Punctuation)
+{
+  GitGud::Commit commit("", "", "Update text.", 0);
+  EXPECT_EQ(1, commit.getSuggestions().size());
+  GitGud::Commit commit2("", "", "Update text;", 0);
+  EXPECT_EQ(1, commit2.getSuggestions().size());
+  GitGud::Commit commit3("", "", "Update text:", 0);
+  EXPECT_EQ(1, commit3.getSuggestions().size());
+  GitGud::Commit commit4("", "", "Update text -   ", 0);
+  EXPECT_EQ(1, commit4.getSuggestions().size());
 }
 
 TEST(Scoring, BlankLineSuggestion)

@@ -9,6 +9,8 @@
 namespace GitGud
 {
 
+  const std::string WHITESPACE = " \n\r\t\f\v";
+
   static std::map<std::string, int> s_filenames;
 
   void Ast::addFilename(const std::string & filename)
@@ -21,6 +23,27 @@ namespace GitGud
   void Ast::resetFilenames()
   {
     s_filenames.clear();
+  }
+
+  std::string Ast::ltrim(const std::string& s)
+  {
+    size_t start = s.find_first_not_of(WHITESPACE);
+    return (start == std::string::npos) ? "" : s.substr(start);
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  std::string Ast::rtrim(const std::string& s)
+  {
+    size_t end = s.find_last_not_of(WHITESPACE);
+    return (end == std::string::npos) ? "" : s.substr(0, end + 1);
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  std::string Ast::trim(const std::string& s)
+  {
+    return rtrim(ltrim(s));
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -270,6 +293,17 @@ namespace GitGud
     }
 
     checkSentence(score, m_summary, 1);
+
+    auto trimmed_summary = Ast::rtrim(m_summary);
+    auto last_character = trimmed_summary[trimmed_summary.length()-1];
+    if (ispunct(last_character))
+    {
+      std::stringstream ss;
+      ss << "Summary should not end with a '" << last_character << "'";
+      if (last_character != '.') { ss << "."; }
+      addSuggestion(1, ss.str());
+      score -= 0.5;
+    }
 
     return std::max(0.0, score);
   }
