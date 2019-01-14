@@ -80,7 +80,7 @@ namespace GitGud
         MessageNode *new_node;
         auto line = lines[i];
         unsigned line_number = i+1;
-        if (line.compare("") == 0)
+        if (trim(line).compare("") == 0)
           new_node = new BlankNode(this, line_number);
         else if (std::find(line.begin(), line.end(), '-') != line.end()) //TODO: ignore hyphens in words
           new_node = new PointNode(this, line_number, line);

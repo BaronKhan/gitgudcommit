@@ -49,6 +49,10 @@ if [ ! -f ../../lib/libhunspell-1.7.a ]; then
   make
   cp src/hunspell/.libs/libhunspell-1.7.a ../../lib/.
   echo "finished building libhunspell-1.7.a"
+  git reset --hard origin/master
+  git clean -fd
+  rm -f README
+  ln -s README.md README
 fi
 
 if [ ! -f ../../lib/libhunspell-1.7_web.a ]; then
@@ -59,10 +63,10 @@ if [ ! -f ../../lib/libhunspell-1.7_web.a ]; then
   emmake make
   cp src/hunspell/.libs/libhunspell-1.7.a ../../lib/libhunspell-1.7_web.a
   echo "finished building libhunspell-1.7_web.a"
+  git reset --hard origin/master
+  git clean -fd
+  rm -f README
+  ln -s README.md README
 fi
 
-git reset --hard origin/master
-git clean -fd
-rm -f README
-ln -s README.md README
 echo "done"

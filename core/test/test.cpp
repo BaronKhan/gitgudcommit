@@ -154,6 +154,28 @@ TEST(Scoring, BlankLineSuggestion)
   FAIL();
 }
 
+TEST(BlankLine, DetectBlankLine)
+{
+  GitGud::Commit commit("", "", "Add new file\n\nAdd a new config file.", 0);
+  for (auto &suggestion : commit.getSuggestions())
+  {
+    if (suggestion.first == 2 &&
+        suggestion.second.find("blank line") != std::string::npos)
+      FAIL();
+  }
+}
+
+TEST(BlankLine, IgnoreWhitespace)
+{
+  GitGud::Commit commit("", "", "Add new file\n   \nAdd a new config file.", 0);
+  for (auto &suggestion : commit.getSuggestions())
+  {
+    if (suggestion.first == 2 &&
+        suggestion.second.find("blank line") != std::string::npos)
+      FAIL();
+  }
+}
+
 TEST(Summary, Filename)
 {
   GitGud::Commit::addFilename("file.cpp");
