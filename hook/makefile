@@ -18,5 +18,6 @@ install :
 	cp src/commit-msg ~/.gitgudcommit/.
 	cp bin/check-msg ~/.gitgudcommit/.
 	chmod +x ~/.gitgudcommit/check-msg
+	chmod +x ~/.gitgudcommit/commit-msg
 	cp -R ../core/models ~/.gitgudcommit/.
 	git config --global core.hooksPath ~/.gitgudcommit
