@@ -15,6 +15,24 @@ Module['onRuntimeInitialized'] = () => {
   started = true;
 };
 
+var walkAllFiles = function(dir, filelist, stack_size) {
+  if (stack_size > 5)
+    return filelist;
+  try {
+    files = FS.readdir(dir);
+    filelist = filelist || [];
+    files.forEach(function(file) {
+      filelist.push(file);
+      if (FS.isDir(FS.stat(dir + "/" + file).mode)) {
+        filelist = walkAllFiles(dir + file + '/', filelist, stack_size+1);
+      }
+    });
+  } catch (e) {
+    console.log("Exception occurred while reading file/directory: "+e.message)
+  }
+  return filelist;
+};
+
 self.addEventListener('message', function(e) {
   if (!started) { return; }
   var data = e.data;
@@ -22,6 +40,10 @@ self.addEventListener('message', function(e) {
     case 'clone':
       jsgitclone(data.location,data.dir_name);
       self.postMessage('cloned repository to '+data.dir_name);
+      // Read all files
+      var filelist = walkAllFiles(data.dir_name+"/", [], 0);
+      console.log(filelist);
+      self.postMessage({'all_files': filelist })
       break;
     case 'chdir':
       FS.chdir(data.dir_name);

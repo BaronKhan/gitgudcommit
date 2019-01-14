@@ -120,6 +120,8 @@ gitworker.addEventListener('message', function(e) {
         createFailureAlert(error);
       analysisInProgress = false;
       hideProgressBar();
+    } else if (e.data.hasOwnProperty('all_files')) {
+      files = e.data.all_files;
     } else if (e.data.hasOwnProperty("___TOOBIG___")) {
       if (!reloading) {
         reloading = true;
