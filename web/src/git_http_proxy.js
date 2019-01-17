@@ -43,6 +43,8 @@ function onRequest(request, response) {
     valid = false;
   if (path.includes("wget"))
     valid = false;
+  if (path.includes("../"))
+    valid = false;
 
   if (!valid) {
     response.statusCode = 404;

@@ -187,7 +187,7 @@ function analyseRepo(url) {
   var dir_name = "";
   var regexp = /(https:\/\/|git@)github.com\/([a-zA-Z0-9\-\_\/]+|)/g;
   var match = regexp.exec(url);
-  if (match && match.length > 2) {
+  if (match && match.length > 2 && match[2] != "") {
     dir_name = match[2];
     clone(url, dir_name);
   } else {
@@ -518,3 +518,9 @@ setInterval(function() {
 //     document.getElementById("gitGudButton").click();
 //   }
 // });
+
+onUrlBoxClick = function() {
+  var value = $("#urlInput").get(0).value;
+  if (value == "")
+    $("#urlInput").val("https://github.com/")
+}
