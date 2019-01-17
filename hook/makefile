@@ -14,10 +14,10 @@ bin/check-msg : ../core/src/*.cpp src/*.cpp
 	$(CXX) $(CPPFLAGS) -o $@ $^ $(LDFLAGS)
 
 install :
-	-mkdir -p ~/.gitgudcommit
-	cp src/commit-msg ~/.gitgudcommit/.
-	cp bin/check-msg ~/.gitgudcommit/.
-	chmod +x ~/.gitgudcommit/check-msg
-	chmod +x ~/.gitgudcommit/commit-msg
-	cp -R ../core/models ~/.gitgudcommit/.
-	git config --global core.hooksPath ~/.gitgudcommit
+	chmod +x bin/check-msg
+	chmod +x src/commit-msg
+	-mkdir -p ~/.gitgudcommit/hooks
+	cp -R src/commit-msg bin/check-msg ../core/models ~/.gitgudcommit/hooks/.
+	if [ -d "/usr/share/git-core/templates/hooks" ]; then cp -R src/commit-msg /usr/share/git-core/templates/hooks/.; fi
+	if [ -d "/usr/local/share/git-core/templates/hooks" ]; then cp -R src/commit-msg /usr/local/share/git-core/templates/hooks/.; fi
+	git config --global core.hooksPath ~/.gitgudcommit/hooks
