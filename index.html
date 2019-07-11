@@ -1,0 +1,182 @@
+<!-- DOCTYPE HTML -->
+<html>
+  <head>
+    <title>Git Gud Commit</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="apple-mobile-web-app-title" content="Git Gud Commit">
+    <meta name="application-name" content="Git Gud Commit">
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="file_upload.css">
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+  </head>
+  <body>
+    <h1 class="text-center"><img src="/android-icon-36x36.png" alt="logo" id="logo"/> 
+    Git Gud Commit</h1>
+    <center>
+      <p>Enter a public GitHub repository URL to analyse its quality!</p>
+      <small>You can also upload a zipped archive of a repository.</small>
+    </center>
+    <div id="panelRepo" class="panel panel-default">
+      <div class="form-inline text-center">
+        <input type="text" class="form-control"
+            placeholder="Enter GitHub Repository URL (https://github.com/...)" style="width: 358px;"
+            value="" id="urlInput" onclick="onUrlBoxClick();">
+        <div class="fileUpload btn btn-default">
+          <span>Upload ZIP</span>
+          <input type="file" class="upload" id="uploadZip"/>
+        </div>
+        <button id="gitGudButton" class="btn btn-primary" onclick="analyseUrl()" disabled="">Git Gud</button>
+      </div>
+
+      <div class="progress" id="cloneProgress" style="display:none">
+        <div class="progress-bar progress-bar-striped active" id="cloneProgressBar" role="progressbar"
+                  aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+        </div>
+      </div>
+
+      <center>
+        <img id="loadingImg" src="loading.gif" alt="Analysing..." style="display:none">
+      </center>
+
+    </div>
+
+    <div id="panelAnalysis" class="panel panel-default">
+      <ul class="nav nav-tabs">
+        <li id="tabSummary" style="display: none;"><a data-toggle="tab" href="#summary">Summary</a></li>
+        <li id="tabCommits" style="display: none;"><a data-toggle="tab" href="#commits">Commits</a></li>
+        <li id="tabTimeline" style="display: none;"><a data-toggle="tab" href="#timeline">Timeline</a></li>
+        <li id="tabFAQ"><a data-toggle="tab" href="#faq">FAQ</a></li>
+      </ul>
+
+      <div class="tab-content">
+        <div id="summary" class="tab-pane fade in text-center">
+          <h3>SUMMARY</h3>
+          <p id="repoRating">This repository has a rating of</p>
+          <div class="rating" id="repoStars">
+            <span>&#x2605;</span><span>&#x2605;</span><span>&#x2605;</span><span>&#x2605;</span><span>&#x2605;</span>
+          </div>
+          <p id="repoComment"></p>
+          <br>
+          <p>Share your rating on</p>
+          <ul class="social">
+            <!-- <li><a href="http://www.facebook.com/sharer.php?s=100&p[title]=Git Gud Commit&p[summary]=This is a test&p[url]=http://gitgudcommit.com" target="_blank" class="icon fa-facebook"><span class="label">Facebook</span></a></li> -->
+            <li><a id="twitterLink" href="http://twitter.com/share?text=My Git repository at https://github.com/BaronKhan/gitgudcommit has a rating of 5 out of 5. Check out the quality of your own Git repositories at&url=http://gitgudcommit.com&hashtags=GitGud"
+              target="_blank" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+            <!-- <li><a href="https://www.linkedin.com/shareArticle?mini=true&url=http://gitgudcommit.com&title=Git%20Gud%20Commit&summary=My%20Git%20repository%20at%20https://github.com/BaronKhan/gitgudcommit%20has%20a%20rating%20of%205%20out%20of%205.%20Check%20out%20the%20quality%20of%20your%20own%20Git%20repositories%20at%20Git%20Gud%20Commit&source=GitGudCommit"
+              target="_blank" class="icon fa-linkedin"><span class="label">LinkedIn</span></a></li> -->
+          </ul>
+        </div>
+        <div id="commits" class="tab-pane fade">
+          <h3 class="text-center">COMMITS</h3>
+          <div class="container search-table">
+            <div class="search-box">
+              <div class="row">
+                <div class="col-md-3">
+                  <h5>Search for Commits:</h5>
+                </div>
+                <div class="col-md-9">
+                  <input type="text" id="commitSearchInput" class="form-control" placeholder="Search all commits">
+                </div> 
+              </div>
+            </div>
+            <div class="search-list">
+              <h3 id="commitCount">303 Commits Found</h3>
+              <table class="table" id="commitTable">
+                <thead id="tableHeadData">
+                
+                </thead>
+
+                <tbody id="tableBodyData">
+                
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div id="timeline" class="tab-pane fade">
+          <h3 class="text-center">Timeline of Average Commit Score</h3>
+          <canvas id="scoreChart" height="85%"></canvas>
+        </div>
+        <div id="faq" class="tab-pane fade">
+          <div class="col-md-7 col-centered" align="justify">
+            <h3 class="text-center">FAQ</h3>
+            <h4>What is this website?</h4>
+            <p>This website is part of the "Git Gud Commit" project - a suite of tools for improving
+            the quality of Git repositories. Using this website, you
+            will be able to determine the quality of commit messages in a
+            Git repository. The phrase "git gud" originates from an Internet meme
+            as an intentional misspelling of the phrase "get good".</p>
+            <h4>How do you know if a commit message is 'good'?</h4>
+            <p>Linus Torvalds, the creator of the Linux kernel and Git, has outlined
+              what makes a good commit message <a target="_blank"
+              href="https://github.com/torvalds/subsurface-for-dirk/blob/a48494d2fbed58c751e9b7e8fbff88582f9b2d02/README#L88">
+            here</a>.
+              Several developers have generalised these guidelines and created a
+              set of 'rules' for commit messages.
+              Using natural language processing techniques, commit messages can be
+              analysed to determine whether they abide to these rules, and a score
+              is assigned to the commit using a simple algorithm.</p>
+            <h4>Why should I care about my commit messages?</h4>
+            <p>Writing good commit messages is not only good practice, it can be considered
+            essential for large-scale projects. If a user is searching for a commit
+            which has broken something critical, the message, "yayy, it works! (i think)" is
+            not going to help them determine whether that commit could have caused the issue.
+            While commands such as "git blame" may make this easier,
+            they do not help in cases where you are not sure which source files
+            should be inspected.</p>
+            <p>While you shouldn't expect to write essays for each commit you make, a reasonable
+            level of detail should be given, so the changes can be determined from just
+            the message.</p>
+            <h4>Is this website stealing my data?</h4>
+            <p>Repositories are cloned/stored locally and <b>are never accessed by,
+             or stored on, any server</b>.</p>
+            <p>For the analysis of a public repository via a GitHub URL, the web server which serves this
+              website is running a proxy for GitHub.com, and the headers of any
+              GET/POST requests to GitHub.com are slightly altered in order to bypass
+              the CORS policy. The web server does not handle any repository data directly.
+              Private and Enterprise repositories cannot be read via a URL, but
+              can be read via an uploaded ZIP. The ZIP file and its contents are
+              never uploaded to any server, and any analysis is performed locally.</p>
+            <h4>Anything else I should know?</h4>
+            <p>Check out the GitHub repository of this project <a target="_blank"
+              href="https://github.com/BaronKhan/gitgudcommit">here</a> for more information.
+            Feel free to analyse the repostitory with this tool if you want :)</p>
+            
+            <small>Git Gud Commit is maintained by Baron Khan
+            and licensed under the MIT License. Git Gud Commit is not affiliated
+            with Git, GitHub or GitLab. The Git Logo by Jason Long is licensed
+            under the Creative Commons Attribution 3.0 Unported License.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </body>
+
+  <script src="jszip.min.js"></script>
+  <script src="jquery.min.js"></script>
+  <script src="bootstrap.min.js"></script>
+  <script src="chart.bundle.min.js"></script>
+  <script src="main.js"></script>
+  <script src="file_upload.js"></script>
+  <script src="score_chart.js"></script>
+
+</html>
