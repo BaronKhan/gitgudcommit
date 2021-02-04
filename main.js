@@ -522,5 +522,20 @@ setInterval(function() {
 onUrlBoxClick = function() {
   var value = $("#urlInput").get(0).value;
   if (value == "")
-    $("#urlInput").val("https://github.com/")
+  {
+    var textArray = [
+      'https://github.com/BaronKhan/gitgudcommit',
+      'https://github.com/google/tensorstore',
+      'https://github.com/google/GoogleUtilities',
+      'https://github.com/cisco/ampnetworkflow',
+      'https://github.com/microsoft/real-time-blend-demo',
+      'https://github.com/facebook/chef-utils',
+      'https://github.com/facebook/shimmer-android',
+      'https://github.com/facebook/fbtftp',
+      'https://github.com/cisco/ciscohls',
+      'https://github.com/cisco/arc'
+    ];
+    var randomNumber = Math.floor(Math.random()*textArray.length);
+    $("#urlInput").val(textArray[randomNumber])
+  }
 }
